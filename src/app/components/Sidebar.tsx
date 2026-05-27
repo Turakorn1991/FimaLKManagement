@@ -35,16 +35,16 @@ const navItems = [
     sub: "Providers",
   },
   {
-    path: "/permissions",
-    icon: ShieldCheck,
-    label: "จัดการสิทธิ์",
-    sub: "Permissions",
-  },
-  {
     path: "/services",
     icon: Layers,
     label: "บริการ",
     sub: "Services",
+  },
+  {
+    path: "/permissions",
+    icon: ShieldCheck,
+    label: "จัดการสิทธิ์",
+    sub: "Permissions",
   },
   {
     path: "/log-linkage",

@@ -683,12 +683,11 @@ export function Services() {
                 "'Noto Sans Thai', 'Inter', sans-serif",
             }}
           >
-            จัดการบริการข้อมูลทั้งหมด — Service ID สร้างจาก
-            Prefix Code ของ Provider
+            ข้อมูลบริการที่เชื่อมโยงต่อกับหน่วยงานต่างๆ ทั้งภาครัฐและเอกชน
           </p>
         </div>
         <Button icon={Plus} onClick={openAdd}>
-          เพิ่มบริการใหม่
+          เพิ่มบริการ
         </Button>
       </div>
 
@@ -803,7 +802,9 @@ export function Services() {
         >
           <div
             style={{
-              minWidth: "380px",
+              position: "relative",
+              minWidth: "280px",
+              flex: 1,
             }}
           >
             <Search

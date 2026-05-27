@@ -6,6 +6,7 @@ import {
   Calendar,
   FileSpreadsheet,
   ImageDown,
+  RotateCcw,
 } from "lucide-react";
 import {
   BarChart,
@@ -712,14 +713,13 @@ export function LogPage({
             }}
           >
             <Search
-              size={14}
+              size={15}
               style={{
                 position: "absolute",
-                left: "10px",
+                left: "12px",
                 top: "50%",
                 transform: "translateY(-50%)",
                 color: "#9CA3AF",
-                pointerEvents: "none",
               }}
             />
             <input
@@ -731,10 +731,10 @@ export function LogPage({
               placeholder="ค้นหา Log ID, Client, บริการ..."
               style={{
                 width: "100%",
-                padding: "8px 10px 8px 32px",
+                padding: "8px 12px 8px 36px",
                 border: "1px solid #E5E7EB",
                 borderRadius: "8px",
-                fontSize: "12px",
+                fontSize: "13px",
                 fontFamily:
                   "'Noto Sans Thai', 'Inter', sans-serif",
                 outline: "none",
@@ -775,31 +775,35 @@ export function LogPage({
           </button>
           <button
             onClick={clearFilters}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor =
-                "#F3F4F6")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = "white")
-            }
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#F3F4F6";
+              e.currentTarget.style.borderColor = "#9CA3AF";
+              e.currentTarget.style.color = "#374151";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#F9FAFB";
+              e.currentTarget.style.borderColor = "#D1D5DB";
+              e.currentTarget.style.color = "#6B7280";
+            }}
             style={{
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
               padding: "8px 16px",
-              backgroundColor: "white",
-              color: "#494949",
-              border: "1px solid #494949",
+              backgroundColor: "#F9FAFB",
+              color: "#6B7280",
+              border: "1px solid #D1D5DB",
               borderRadius: "8px",
               fontSize: "13px",
-              fontWeight: 500,
+              fontWeight: 600,
               cursor: "pointer",
               fontFamily:
                 "'Noto Sans Thai', 'Inter', sans-serif",
               whiteSpace: "nowrap",
-              transition: "background-color 0.15s",
+              transition: "all 0.15s",
             }}
           >
+            <RotateCcw size={13} />
             ล้างตัวกรอง
           </button>
         </div>

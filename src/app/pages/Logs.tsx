@@ -472,10 +472,10 @@ export function Logs() {
             }}
           >
             <Search
-              size={14}
+              size={15}
               style={{
                 position: "absolute",
-                left: "10px",
+                left: "12px",
                 top: "50%",
                 transform: "translateY(-50%)",
                 color: "#9CA3AF",
@@ -487,7 +487,7 @@ export function Logs() {
               placeholder="ค้นหา Log ID, Client, Service..."
               style={{
                 width: "100%",
-                padding: "8px 10px 8px 30px",
+                padding: "8px 12px 8px 36px",
                 border: "1px solid #E5E7EB",
                 borderRadius: "8px",
                 fontSize: "13px",

@@ -468,7 +468,7 @@ export function Providers() {
   const columns: Column<Provider>[] = [
     {
       key: "name",
-      header: "ชื่อหน่วยงาน / Provider",
+      header: "ชื่อหน่วยงาน",
       sortable: true,
       render: (row) => (
         <div
@@ -526,14 +526,14 @@ export function Providers() {
     },
     {
       key: "serviceCount",
-      header: "จำนวน Services",
+      header: "จำนวนบริการ",
       width: "150px",
       align: "center",
       render: (row) =>
         row.serviceCount > 0 ? (
           <button
             onClick={() => setServicesModal(row)}
-            title={`ดูบริการของ ${row.name}`}
+            title={`ข้อมูลบริการของ ${row.name}`}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -787,15 +787,15 @@ export function Providers() {
         open={!!confirm}
         onClose={() => setConfirm(null)}
         onConfirm={() => confirm && handleDelete(confirm.id)}
-        title="ยืนยันการลบ Provider"
+        title="ยืนยันการลบข้อมูลผู้ให้บริการ"
         message={`คุณต้องการลบ "${confirm?.name}" (${confirm?.code}) ออกจากระบบหรือไม่? บริการทั้งหมดในหน่วยงานนี้จะถูกลบด้วย`}
-        confirmLabel="ลบ Provider"
+        confirmLabel="ยืนยัน"
       />
 
       <Modal
         open={!!servicesModal}
         onClose={() => setServicesModal(null)}
-        title={`บริการของ ${servicesModal?.name ?? ""}`}
+        title={`ข้อมูลบริการ - ${servicesModal?.name ?? ""}`}
         size="md"
         footer={
           <Button onClick={() => setServicesModal(null)}>
@@ -924,7 +924,7 @@ export function Providers() {
         open={showModal}
         onClose={() => setShowModal(false)}
         title={
-          editPrv ? "แก้ไข ผู้ให้บริการ" : "เพิ่ม ผู้ให้บริการ ใหม่"
+          editPrv ? "แก้ไขข้อมูลผู้ให้บริการ" : "เพิ่มข้อมูลผู้ให้บริการ"
         }
         size="md"
         footer={
