@@ -217,6 +217,70 @@ REVOKE: bg #FFF7ED / color #C2410C   GRANT:  bg #F0FDFA / color #0F766E
 - Response Body: success → `{ status, statusCode:200, message, timestamp }` / failure → `{ status, statusCode, errorCode, message }` — computed, not stored
 - Error box (failure only): `⚠ ข้อมูลข้อผิดพลาด` + `errorMessage` text only (no errorCode chip)
 
+### หน้าหลัก (Dashboard)
+
+**File**: `src/app/pages/Dashboard.tsx`
+
+**Internal components** (all defined in the same file — not shared):
+
+| Component | Purpose |
+|---|---|
+| `StatCard` | Single KPI tile — icon box + big number + title + sub-text. No trend props. |
+| `SummaryCard` | 3-metric card (total / success / failure) + progress bar |
+| `ChartTooltip` | Custom Recharts tooltip showing `fullName` + request count |
+| `useWindowWidth` | `useState + useEffect + window.addEventListener("resize")` — returns current `window.innerWidth`; used instead of CSS media queries because all styles are inline |
+
+**Responsive breakpoints**
+```ts
+const statCols = w >= 1200 ? "repeat(5, 1fr)" : w >= 768 ? "repeat(3, 1fr)" : "repeat(2, 1fr)";
+const twoCols  = w >= 900  ? "1fr 1fr" : "1fr";
+```
+`statCols` drives the 5 KPI cards row; `twoCols` drives both the charts row and the summary cards row.
+
+**Page layout** (top to bottom):
+1. **Stat cards** — 5-column grid using `statCols`
+2. **Two bar charts** side-by-side using `twoCols` (Recharts `BarChart` horizontal layout, `ResponsiveContainer height={260}`)
+3. **Two summary cards** side-by-side using `twoCols`
+
+**StatCard props**
+```ts
+{ title: string; value: string; sub: string; icon: React.ElementType; iconColor: string; iconBg: string; }
+```
+No `trendValue`, `trendLabel`, or `trendUp` — those props do not exist.
+
+**5 StatCards** (in order):
+
+| Title | Value | Icon | iconColor | iconBg |
+|---|---|---|---|---|
+| แอปพลิเคชันที่มีสิทธิ์ใช้งาน | 38 | `ShieldCheck` | `#7C3AED` | `#F5F3FF` |
+| บริการใบอนุญาต/หนังสืออนุญาต อท. | 47 | `Layers` | `#003087` | `#EEF2FF` |
+| บริการเชื่อมโยงข้อมูล (Linkage II) | 128 | `GitBranch` | `#00A8A8` | `#F0FDFA` |
+| Request อท. ทั้งหมด | 312,237 | `Activity` | `#003087` | `#EEF2FF` |
+| Request Linkage II ทั้งหมด | 423,287 | `BarChart2` | `#00A8A8` | `#F0FDFA` |
+
+**Chart data constants**
+```ts
+ALL_OT_SERVICES  // 10 อท. services sorted desc by value — { code, label, fullName, value }
+top5             // ALL_OT_SERVICES.slice(0, 5) — fed to left BarChart
+BAR_COLORS       // ["#003087","#0A4DAA","#2B6CC4","#5B8FD8","#8FB5E8"] — navy gradient
+
+LINKAGE2_SERVICES // 5 Linkage II services — { label, fullName, value } — fed to right BarChart
+TEAL_COLORS      // ["#00A8A8","#00BFC0","#22D3D3","#5CE0E0","#99ECEC"] — teal gradient
+```
+Both charts: horizontal bar (`layout="vertical"`), each bar colored via `<Cell fill={COLORS[i]} />`, `maxBarSize={38}`, `radius={[0, 7, 7, 0]}`. A legend list below each chart shows `label · N,NNN requests`.
+
+**SummaryCard data**
+```ts
+summaryOT  = { total: 12_432, success: 11_980, failure: 452 }   // อท. licenses
+summaryAll = { total: 28_750, success: 27_340, failure: 1_410 }  // Linkage II
+```
+- Metrics displayed: Request ทั้งหมด (black) · สำเร็จ (`#059669`) · ไม่สำเร็จ (`#DC2626`)
+- **No % labels** directly under the big numbers (removed) — percentages only appear as `สำเร็จ xx.x%` / `ไม่สำเร็จ xx.x%` in the small text below the progress bar
+- Progress bar: bg `#FEE2E2`, fill `#059669`, width = `successPct%`
+- Success color is **`#059669`** (green) — not TEAL (`#00A8A8`)
+
+---
+
 ### Styling Conventions
 
 All pages use **inline styles** (not Tailwind classes). Consistent design tokens used throughout:

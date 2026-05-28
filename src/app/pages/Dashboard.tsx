@@ -1,12 +1,12 @@
+import { useState, useEffect } from "react";
 import {
-  MonitorSmartphone,
-  Layers,
   ShieldCheck,
+  Layers,
+  GitBranch,
   Activity,
   CheckCircle2,
   XCircle,
   BarChart2,
-  MonitorPause,
 } from "lucide-react";
 import {
   BarChart,
@@ -218,9 +218,6 @@ function StatCard({
   icon: Icon,
   iconColor,
   iconBg,
-  trendValue,
-  trendLabel,
-  trendUp,
 }: {
   title: string;
   value: string;
@@ -228,9 +225,6 @@ function StatCard({
   icon: React.ElementType;
   iconColor: string;
   iconBg: string;
-  trendValue: string;
-  trendLabel: string;
-  trendUp: boolean;
 }) {
   return (
     <div
@@ -247,38 +241,17 @@ function StatCard({
     >
       <div
         style={{
+          width: "44px",
+          height: "44px",
+          borderRadius: "11px",
+          backgroundColor: iconBg,
           display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
         }}
       >
-        <div
-          style={{
-            width: "44px",
-            height: "44px",
-            borderRadius: "11px",
-            backgroundColor: iconBg,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
-        >
-          <Icon size={20} color={iconColor} />
-        </div>
-        <span
-          style={{
-            fontSize: "11px",
-            fontWeight: 600,
-            color: trendUp ? "#059669" : "#DC2626",
-            backgroundColor: trendUp ? "#ECFDF5" : "#FEF2F2",
-            padding: "3px 8px",
-            borderRadius: "20px",
-            fontFamily: FF,
-          }}
-        >
-          {trendValue}
-        </span>
+        <Icon size={20} color={iconColor} />
       </div>
       <div>
         <div
@@ -312,7 +285,7 @@ function StatCard({
             fontFamily: FF,
           }}
         >
-          {sub} {trendLabel && "·"} {trendLabel}
+          {sub}
         </div>
       </div>
     </div>
@@ -426,16 +399,6 @@ function SummaryCard({
           >
             {total.toLocaleString()}
           </div>
-          <div
-            style={{
-              fontSize: "10px",
-              color: "#9CA3AF",
-              marginTop: "4px",
-              fontFamily: FF,
-            }}
-          >
-            รวมวันนี้
-          </div>
         </div>
 
         {/* Divider */}
@@ -470,24 +433,13 @@ function SummaryCard({
             style={{
               fontSize: "30px",
               fontWeight: 800,
-              color: TEAL,
+              color: "#059669",
               lineHeight: 1,
               fontFamily: "Inter, sans-serif",
               letterSpacing: "-0.5px",
             }}
           >
             {success.toLocaleString()}
-          </div>
-          <div
-            style={{
-              fontSize: "10px",
-              color: "#059669",
-              marginTop: "4px",
-              fontFamily: FF,
-              fontWeight: 600,
-            }}
-          >
-            {successPct}%
           </div>
         </div>
 
@@ -531,17 +483,6 @@ function SummaryCard({
           >
             {failure.toLocaleString()}
           </div>
-          <div
-            style={{
-              fontSize: "10px",
-              color: "#DC2626",
-              marginTop: "4px",
-              fontFamily: FF,
-              fontWeight: 600,
-            }}
-          >
-            {failPct}%
-          </div>
         </div>
       </div>
 
@@ -559,7 +500,7 @@ function SummaryCard({
           style={{
             height: "100%",
             width: `${successPct}%`,
-            backgroundColor: TEAL,
+            backgroundColor: "#059669",
             borderRadius: "3px",
             transition: "width 0.5s ease",
           }}
@@ -575,7 +516,7 @@ function SummaryCard({
         <span
           style={{
             fontSize: "10px",
-            color: TEAL,
+            color: "#059669",
             fontFamily: FF,
           }}
         >
@@ -595,8 +536,25 @@ function SummaryCard({
   );
 }
 
+/* ─── Responsive hook ───────────────────────────────────────── */
+function useWindowWidth() {
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1280
+  );
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  return width;
+}
+
 /* ─── Dashboard ─────────────────────────────────────────────── */
 export function Dashboard() {
+  const w = useWindowWidth();
+  const statCols  = w >= 1200 ? "repeat(5, 1fr)" : w >= 768 ? "repeat(3, 1fr)" : "repeat(2, 1fr)";
+  const twoCols   = w >= 900  ? "1fr 1fr" : "1fr";
+
   return (
     <div style={{ fontFamily: FF }}>
       {/* Page title */}
@@ -624,11 +582,11 @@ export function Dashboard() {
         </p>
       </div>
 
-      {/* Row 1 – 4 stat cards */}
+      {/* Row 1 – stat cards */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(5, 1fr)",
+          gridTemplateColumns: statCols,
           gap: "16px",
           marginBottom: "20px",
         }}
@@ -640,51 +598,46 @@ export function Dashboard() {
           icon={ShieldCheck}
           iconColor="#7C3AED"
           iconBg="#F5F3FF"
-          trendUp={true}
         />
         <StatCard
-          title="บริการใบอนุญาต/หนังสืออนุญาต"
+          title="บริการใบอนุญาต/หนังสืออนุญาต อท."
           value="47"
-          sub="บริการใบอนุญาต/หนังสืออนุญาตทั้งหมด ของ อท."
+          sub="บริการทั้งหมดของ กรมการอุตสาหกรรมทหาร"
           icon={Layers}
           iconColor={NAVY}
           iconBg="#EEF2FF"
-          trendUp={true}
         />
         <StatCard
           title="บริการเชื่อมโยงข้อมูล (Linkage II)"
           value="128"
           sub="บริการเชื่อมโยงทั้งหมดที่เปิดใช้ในระบบ"
-          icon={Layers}
+          icon={GitBranch}
           iconColor={TEAL}
-          iconBg="#F0FDFD"
-          trendUp={true}
+          iconBg="#F0FDFA"
         />
         <StatCard
-          title="Request ทั้งหมด"
+          title="Request อท. ทั้งหมด"
           value="312,237"
-          sub="บริการใบอนุญาต/หนังสืออนุญาต ของ อท."
+          sub="รวมทุกบริการใบอนุญาต/หนังสืออนุญาต ของ อท."
           icon={Activity}
           iconColor={NAVY}
           iconBg="#EEF2FF"
-          trendUp={true}
         />
         <StatCard
-          title="Request ทั้งหมด"
+          title="Request Linkage II ทั้งหมด"
           value="423,287"
-          sub="บริการเชื่อมโยงข้อมูล (Linkage II)"
-          icon={Activity}
+          sub="รวมทุกบริการเชื่อมโยงข้อมูล (Linkage II)"
+          icon={BarChart2}
           iconColor={TEAL}
-          iconBg="#F0FDFD"
-          trendUp={true}
+          iconBg="#F0FDFA"
         />
       </div>
 
-      {/* Middle – Two charts side by side */}
+      {/* Middle – Two charts */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns: twoCols,
           gap: "16px",
           marginBottom: "20px",
         }}
@@ -727,8 +680,7 @@ export function Dashboard() {
                     fontFamily: FF,
                   }}
                 >
-                  Request ทั้งหมด
-                  เรียงจากสูงสุด
+                  ข้อมูลรวมทั้งหมด · เรียงจากสูงสุด
                 </p>
               </div>
             </div>
@@ -872,8 +824,7 @@ export function Dashboard() {
                     fontFamily: FF,
                   }}
                 >
-                  Request ทั้งหมด
-                  เรียงจากสูงสุด
+                  ข้อมูลรวมทั้งหมด · เรียงจากสูงสุด
                 </p>
               </div>
             </div>
@@ -984,20 +935,20 @@ export function Dashboard() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns: twoCols,
           gap: "16px",
         }}
       >
         <SummaryCard
           title="สรุป Request – บริการใบอนุญาต/หนังสืออนุญาต ของ อท."
-          subtitle="รวมทุกบริการในระบบ"
+          subtitle="รวมทุกบริการใบอนุญาต/หนังสืออนุญาตของ กรมการอุตสาหกรรมทหาร"
           total={summaryOT.total}
           success={summaryOT.success}
           failure={summaryOT.failure}
         />
         <SummaryCard
           title="สรุป Request – บริการเชื่อมโยงข้อมูล (Linkage II)"
-          subtitle="รวมทุกบริการในระบบ"
+          subtitle="รวมทุกบริการเชื่อมโยงข้อมูลกับหน่วยงานภาครัฐและเอกชน"
           total={summaryAll.total}
           success={summaryAll.success}
           failure={summaryAll.failure}
