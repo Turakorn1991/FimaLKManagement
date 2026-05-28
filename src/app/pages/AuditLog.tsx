@@ -189,7 +189,7 @@ export function AuditLog() {
     {
       key: "id", header: "LOG ID", width: "120px",
       render: (a) => (
-        <span style={{ fontFamily: "monospace", fontSize: "13px", fontWeight: 500, color: "#374151" }}>
+        <span style={{ fontFamily: "monospace", fontSize: "12px", fontWeight: 400, color: "#374151" }}>
           {a.id}
         </span>
       ),
@@ -197,7 +197,7 @@ export function AuditLog() {
     {
       key: "timestamp", header: "วัน-เวลา", width: "185px", sortable: true,
       render: (a) => (
-        <span style={{ fontSize: "13px", fontWeight: 500, color: "#374151", fontFamily: "Inter, sans-serif", whiteSpace: "nowrap" }}>
+        <span style={{ fontSize: "13px", fontWeight: 400, color: "#374151", fontFamily: "Inter, sans-serif", whiteSpace: "nowrap" }}>
           {a.timestamp}
         </span>
       ),
@@ -205,7 +205,7 @@ export function AuditLog() {
     {
       key: "user", header: "ผู้ดำเนินการ",
       render: (a) => (
-        <span style={{ fontSize: "13px", fontWeight: 500, color: "#111827", fontFamily: FF }}>
+        <span style={{ fontSize: "13px", fontWeight: 400, color: "#111827", fontFamily: FF }}>
           {a.user}
         </span>
       ),
@@ -215,8 +215,8 @@ export function AuditLog() {
       render: (a) => {
         const cfg = actionConfig[a.action];
         return (
-          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "3px 9px", borderRadius: "20px", backgroundColor: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}`, fontSize: "11px", fontWeight: 700, fontFamily: "monospace", whiteSpace: "nowrap" }}>
-            {cfg.label}
+          <span style={{ fontSize: "13px", fontWeight: 400, color: "#111827", fontFamily: FF }}>
+            {a.action}
           </span>
         );
       },
@@ -225,14 +225,11 @@ export function AuditLog() {
       key: "entity", header: "เหตุการณ์",
       render: (a) => (
         <div>
-          <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "3px" }}>
-            <span style={{ fontSize: "10px", fontWeight: 700, fontFamily: "monospace", backgroundColor: "#F3F4F6", color: "#374151", padding: "1px 7px", borderRadius: "4px", border: "1px solid #E5E7EB" }}>
-              {a.entity}
-            </span>
-            <span style={{ fontSize: "10px", color: "#6B7280", fontFamily: "monospace" }}>{a.entityId}</span>
+          <div style={{ fontSize: "13px", fontWeight: 400, color: "#111827", fontFamily: FF }}>
+            {a.entity}
           </div>
-          <div style={{ fontSize: "13px", fontWeight: 500, color: "#111827", fontFamily: FF, lineHeight: 1.5 }}>
-            {a.details}
+          <div style={{ fontSize: "11px", color: "#6B7280", fontFamily: "monospace", marginTop: "2px" }}>
+            RefId : {a.entityId}
           </div>
         </div>
       ),
@@ -264,7 +261,7 @@ export function AuditLog() {
     {
       key: "ipAddress", header: "IP Address", width: "140px",
       render: (a) => (
-        <span style={{ fontSize: "13px", fontWeight: 500, fontFamily: "monospace", color: "#374151" }}>
+        <span style={{ fontSize: "13px", fontWeight: 400, fontFamily: "monospace", color: "#374151" }}>
           {userIpMap[a.user] ?? "—"}
         </span>
       ),

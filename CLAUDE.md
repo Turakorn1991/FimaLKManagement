@@ -37,16 +37,35 @@ Pages (`src/app/pages/`):
 | Component | Purpose |
 |---|---|
 | `DataTable<T>` | Generic sortable/paginated table; takes `columns: Column<T>[]`, `data: T[]`, `keyField` |
-| `Modal` | Centered overlay with `title`, `size` (`sm`/`md`/`lg`/`xl`), `footer` slot |
-| `ConfirmDialog` | Destructive-action confirmation wrapping `Modal` |
-| `Button` | Primary/secondary/danger variants with optional `icon` prop |
-| `ToggleSwitch` | Active/inactive toggle used in Permissions |
+| `Modal` | Centered overlay with `title`, `subtitle?`, `icon?`, `iconBg?`, `size` (`sm`/`md`/`lg`/`xl`), `footer` slot |
+| `ConfirmDialog` | Standalone confirm overlay (not wrapping Modal) with `variant`, `title`, `message`, `confirmLabel`, `cancelLabel`, `loading` |
+| `Button` | `variant`: `primary`/`secondary`/`danger`/`teal`; optional `icon` prop (Lucide component) prepends icon |
+| `ToggleSwitch` | Active/inactive toggle; `checked`, `onChange(val?)`, optional `disabled` |
 | `StatusBadge` | Pill badge for active/inactive states |
-| `LogPage` | Reusable log viewer component — **NOT used by LogLinkage or LogLicense** (both pages are fully self-contained). Reserved for future log pages. |
+| `LogPage` | Reusable log viewer — **NOT used by any page** (all log pages are self-contained). Reserved for future use. |
 
-`Breadcrumb` component exists at `src/app/components/Breadcrumb.tsx` but is not rendered on any page.
+`Breadcrumb` exists at `src/app/components/Breadcrumb.tsx` but is not rendered anywhere.
 
-`src/app/components/ui/` contains a full shadcn/ui component library (Radix UI + Tailwind). These are available but most pages use inline styles instead.
+`src/app/components/ui/` — full shadcn/ui library (Radix UI + Tailwind). Available but most pages use inline styles.
+
+### ConfirmDialog Variants
+
+`ConfirmDialog` has its own fixed overlay (not wrapping `Modal`). Icon: single circle `56px`, icon `28px` inside — **no outer ring**.
+
+```ts
+type ConfirmVariant = "danger" | "warning" | "info" | "success"
+```
+
+| Variant | Icon | iconBg | iconColor | confirmVariant (Button) |
+|---|---|---|---|---|
+| `danger` | `Trash2` | `#FEF2F2` | `#DC2626` | `danger` (red) |
+| `warning` | `AlertTriangle` | `#FFFBEB` | `#D97706` | `primary` (navy) |
+| `info` | `Info` | `#EEF2FF` | `#4338CA` | `primary` (navy) |
+| `success` | `CheckCircle` | `#F0FDF4` | `#16A34A` | `primary` (navy) |
+
+**Save pattern** (add/edit in Providers & Services) — always `variant="success"`, `confirmLabel="ยืนยัน"`.  
+**Delete pattern** — always `variant="danger"` (default), confirmLabel "ลบ…".  
+**Toggle pattern** (Services) — `variant="warning"` (disable) / `"success"` (enable).
 
 ### DataTable Text Standards
 
@@ -269,6 +288,13 @@ TEAL_COLORS      // ["#00A8A8","#00BFC0","#22D3D3","#5CE0E0","#99ECEC"] — teal
 ```
 Both charts: horizontal bar (`layout="vertical"`), each bar colored via `<Cell fill={COLORS[i]} />`, `maxBarSize={38}`, `radius={[0, 7, 7, 0]}`. A legend list below each chart shows `label · N,NNN requests`.
 
+**Chart download** — `downloadChartPNG(ref, title, filename, legend?)`:
+- `chartRef1` / `chartRef2` — `useRef<HTMLDivElement>` wrapping each `<ResponsiveContainer>`
+- `legend?: Array<{ label, value, color }>` — optional; draws divider + colored 7×7 square + bold label + gray "N,NNN requests" below chart
+- Canvas: scale `sc=2`, `padX=24`, `headerH=56`; header text = title (bold 13px) + subtitle "ข้อมูลรวมทั้งหมด · เรียงจากสูงสุด" (gray 10px)
+- Chart 1 button hover: `borderColor = NAVY`; Chart 2 button hover: `borderColor = TEAL`
+- Filenames: `"OT-License-Top5.png"` / `"Linkage2-Top5.png"`
+
 **SummaryCard data**
 ```ts
 summaryOT  = { total: 12_432, success: 11_980, failure: 452 }   // อท. licenses
@@ -374,6 +400,49 @@ interface Service {
 **Toggle ConfirmDialog** (`toggleConfirm`) — `variant="warning"` (disable) / `"success"` (enable); confirmLabel "ปิดบริการ" / "เปิดบริการ"
 
 **Delete ConfirmDialog** (`confirm`) — `variant="danger"` (default); confirmLabel "ลบบริการ"
+
+---
+
+### จัดการสิทธิ์ (Permissions)
+
+**File**: `src/app/pages/Permissions.tsx` — full CRUD for client-to-service access grants.
+
+**Types**
+```ts
+type ModalMode = "create" | "edit" | "view"
+
+interface ClientPerm {
+  clientId: string; clientName: string; department: string;
+  updatedAt: string; updatedBy: string;
+  grants: { serviceId: string; isPermanent: boolean; expireDate: string; }[];
+}
+
+interface ModalServiceRow {
+  serviceId: string; serviceName: string; provider: string;
+  checked: boolean; isPermanent: boolean; expireDate: string;
+}
+```
+
+**Data** — `initClients`: 8 hardcoded `ClientPerm` entries (`CLT-001`…`CLT-008`). `ALL_SERVICES`: 22 services (same as Services page subset). `CLIENT_OPTIONS`: 8 client options for dropdown.
+
+**Main table columns** — Client ID (110px, navy indigo pill `#EEF2FF/#003087`, monospace, `fontWeight 700`) → แอปพลิเคชัน (auto, name + department sub-text) → จำนวนบริการ (180px, center, indigo pill button opens view modal) → อัปเดตล่าสุด (200px, date + "โดย" sub-text) → จัดการ (120px, Edit + Delete icon buttons)
+
+**Search** — `maxWidth: "380px"` (not 75% — this page predates the standard)
+
+**PermissionModal** (inline component, not using shared `Modal`):
+- Size: `maxWidth: 820px`, `maxHeight: 90vh`, scrollable body
+- Header icon: `ShieldCheck` (edit/create, navy `#EEF2FF`) or `Eye` (view, purple `#F5F3FF` / `#7C3AED`)
+- Mode badge: Create=green `#ECFDF5/#059669` · Edit=yellow `#FEF3C7/#D97706` · View=gray `#F3F4F6/#6B7280`
+- Body: Client `<select>` (disabled in edit/view) + service grid table
+- Service grid columns: เลือก (44px checkbox) · ชื่อบริการ/Service ID (1fr) · Provider (140px) · ถาวร (80px, `ToggleSwitch`) · วันที่หมดอายุ (150px, `DatePicker` from shadcn/ui) · delete (90px, view mode hidden)
+- `gridTemplateColumns`: `"44px 1fr 140px 80px 150px 90px"` (edit/create) / `"44px 1fr 140px 80px 150px"` (view)
+- Unchecked rows: `opacity: 0.45` in view mode
+- Footer: ยกเลิก/ปิด + บันทึก (`Save` icon, navy); บันทึก disabled if create mode and no client selected (bg `#CBD5E1`)
+- No ConfirmDialog on save — saves immediately via `onSave(clientId, rows)` + `onClose()`
+
+**Delete** — `ConfirmDialog` `variant="danger"`, `confirmLabel="ลบสิทธิ์ทั้งหมด"`
+
+**`buildModalRows(grants)`** — merges `ALL_SERVICES` with grants map; returns all 22 services with `checked/isPermanent/expireDate` filled from grants.
 
 ---
 
