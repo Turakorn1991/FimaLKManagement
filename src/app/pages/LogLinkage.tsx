@@ -277,17 +277,23 @@ export function LogLinkage() {
     {
       key: "id", header: "LOG ID", width: "130px", sortable: true,
       render: (row) => (
-        <span style={{ fontFamily: "monospace", fontSize: "13px", fontWeight: 500, color: "#374151" }}>
+        <span style={{ fontFamily: "monospace", fontSize: "12px", fontWeight: 400, color: "#374151" }}>
           {row.id}
         </span>
       ),
     },
-    { key: "timestamp", header: "วัน-เวลา", width: "185px", sortable: true },
+    { key: "timestamp", header: "วัน-เวลา", width: "185px", sortable: true,
+      render: (row) => (
+        <span style={{ fontSize: "13px", fontWeight: 400, color: "#374151", fontFamily: "Inter, sans-serif", whiteSpace: "nowrap" }}>
+          {row.timestamp}
+        </span>
+      ),
+    },
     {
       key: "client", header: "แอปพลิเคชัน",
       render: (row) => (
         <div>
-          <div style={{ fontWeight: 500, color: "#111827", fontFamily: FF }}>{row.client}</div>
+          <div style={{ fontWeight: 400, color: "#111827", fontFamily: FF }}>{row.client}</div>
           <div style={{ fontSize: "10px", color: "#6B7280", fontFamily: "monospace" }}>{row.clientId}</div>
         </div>
       ),
@@ -296,7 +302,7 @@ export function LogLinkage() {
       key: "service", header: "บริการ", sortable: true,
       render: (row) => (
         <div>
-          <div style={{ fontWeight: 500, color: "#111827", fontFamily: FF }}>{row.service}</div>
+          <div style={{ fontWeight: 400, color: "#111827", fontFamily: FF }}>{row.service}</div>
           <div style={{ fontSize: "10px", color: "#6B7280", fontFamily: "monospace" }}>{row.serviceId}</div>
         </div>
       ),
@@ -306,7 +312,7 @@ export function LogLinkage() {
       render: (row) => {
         const ok = row.statusCode >= 200 && row.statusCode < 300;
         return (
-          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "5px", padding: "3px 9px", minWidth: "82px", borderRadius: "20px", backgroundColor: ok ? "#ECFDF5" : "#FEF2F2", color: ok ? "#059669" : "#DC2626", border: `1px solid ${ok ? "#A7F3D0" : "#FECACA"}`, fontSize: "11px", fontWeight: 600, fontFamily: FF, whiteSpace: "nowrap" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "24px", padding: "0 9px", minWidth: "82px", borderRadius: "20px", backgroundColor: ok ? "#ECFDF5" : "#FEF2F2", color: ok ? "#059669" : "#DC2626", border: `1px solid ${ok ? "#A7F3D0" : "#FECACA"}`, fontSize: "11px", fontWeight: 600, fontFamily: FF, whiteSpace: "nowrap" }}>
             <span style={{ width: "5px", height: "5px", borderRadius: "50%", backgroundColor: ok ? "#059669" : "#DC2626", display: "inline-block", flexShrink: 0 }} />
             {ok ? "สำเร็จ" : "ไม่สำเร็จ"}
           </span>
@@ -318,7 +324,7 @@ export function LogLinkage() {
       render: (row) => {
         const cfg = statusColor(row.statusCode);
         return (
-          <span style={{ backgroundColor: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}`, borderRadius: "20px", padding: "2px 8px", fontSize: "12px", fontWeight: 700, fontFamily: "monospace" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", backgroundColor: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}`, borderRadius: "20px", height: "24px", padding: "0 9px", fontSize: "12px", fontWeight: 700, fontFamily: "monospace" }}>
             {row.statusCode}
           </span>
         );
@@ -327,7 +333,7 @@ export function LogLinkage() {
     {
       key: "ipAddress", header: "IP Address", width: "140px",
       render: (row) => (
-        <span style={{ fontSize: "13px", fontWeight: 500, fontFamily: "monospace", color: "#374151" }}>
+        <span style={{ fontSize: "13px", fontWeight: 400, fontFamily: "monospace", color: "#374151" }}>
           {row.ipAddress}
         </span>
       ),

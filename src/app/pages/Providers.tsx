@@ -489,55 +489,26 @@ export function Providers() {
       header: "หน่วยงาน",
       sortable: true,
       render: (row) => (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-          }}
-        >
+        <div>
           <div
             style={{
-              width: "38px",
-              height: "38px",
-              borderRadius: "8px",
-              backgroundColor: "#003087",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "9px",
-              fontWeight: 700,
-              color: "white",
+              fontWeight: 400,
+              color: "#111827",
+              fontSize: "13px",
+              fontFamily: "'Noto Sans Thai', 'Inter', sans-serif",
+            }}
+          >
+            {row.name}
+          </div>
+          <div
+            style={{
+              fontSize: "11px",
+              color: "#6B7280",
+              marginTop: "2px",
               fontFamily: "monospace",
-              letterSpacing: "0.04em",
-              flexShrink: 0,
             }}
           >
             {row.code}
-          </div>
-          <div>
-            <div
-              style={{
-                fontWeight: 400,
-                color: "#111827",
-                fontSize: "13px",
-                fontFamily:
-                  "'Noto Sans Thai', 'Inter', sans-serif",
-              }}
-            >
-              {row.name}
-            </div>
-            <div
-              style={{
-                fontSize: "11px",
-                color: "#6B7280",
-                marginTop: "1px",
-                fontFamily:
-                  "'Noto Sans Thai', 'Inter', sans-serif",
-              }}
-            >
-              {row.description}
-            </div>
           </div>
         </div>
       ),

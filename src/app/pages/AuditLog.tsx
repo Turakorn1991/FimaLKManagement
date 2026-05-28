@@ -239,7 +239,7 @@ export function AuditLog() {
       render: (a) => {
         const ok = a.result === "success";
         return (
-          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "5px", padding: "3px 9px", minWidth: "82px", borderRadius: "20px", backgroundColor: ok ? "#ECFDF5" : "#FEF2F2", color: ok ? "#059669" : "#DC2626", border: `1px solid ${ok ? "#A7F3D0" : "#FECACA"}`, fontSize: "11px", fontWeight: 600, fontFamily: FF, whiteSpace: "nowrap" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "24px", padding: "0 9px", minWidth: "82px", borderRadius: "20px", backgroundColor: ok ? "#ECFDF5" : "#FEF2F2", color: ok ? "#059669" : "#DC2626", border: `1px solid ${ok ? "#A7F3D0" : "#FECACA"}`, fontSize: "11px", fontWeight: 600, fontFamily: FF, whiteSpace: "nowrap" }}>
             <span style={{ width: "5px", height: "5px", borderRadius: "50%", backgroundColor: ok ? "#059669" : "#DC2626", display: "inline-block", flexShrink: 0 }} />
             {ok ? "สำเร็จ" : "ไม่สำเร็จ"}
           </span>
@@ -252,7 +252,7 @@ export function AuditLog() {
         const code = getStatusCode(a);
         const cfg = statusCodeColor(code);
         return (
-          <span style={{ backgroundColor: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}`, borderRadius: "20px", padding: "3px 9px", fontSize: "12px", fontWeight: 700, fontFamily: "monospace" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", backgroundColor: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}`, borderRadius: "20px", height: "24px", padding: "0 9px", fontSize: "12px", fontWeight: 700, fontFamily: "monospace" }}>
             {code}
           </span>
         );

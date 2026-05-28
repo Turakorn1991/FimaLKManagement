@@ -33,6 +33,7 @@ interface ModalServiceRow {
 }
 
 interface ClientPerm {
+  permissionId: string;
   clientId: string;
   clientName: string;
   department: string;
@@ -216,6 +217,7 @@ const CLIENT_OPTIONS = [
 
 const initClients: ClientPerm[] = [
   {
+    permissionId: "PRM-001",
     clientId: "CLT-001",
     clientName: "ระบบสารบรรณอิเล็กทรอนิกส์",
     department: "กรมการอุตสาหกรรมทหาร",
@@ -240,6 +242,7 @@ const initClients: ClientPerm[] = [
     ],
   },
   {
+    permissionId: "PRM-002",
     clientId: "CLT-002",
     clientName: "MilLogistics Platform",
     department: "กรมการอุตสาหกรรมทหาร",
@@ -264,6 +267,7 @@ const initClients: ClientPerm[] = [
     ],
   },
   {
+    permissionId: "PRM-003",
     clientId: "CLT-003",
     clientName: "DefLicense Portal",
     department: "กรมการอุตสาหกรรมทหาร",
@@ -298,6 +302,7 @@ const initClients: ClientPerm[] = [
     ],
   },
   {
+    permissionId: "PRM-004",
     clientId: "CLT-004",
     clientName: "FinanceArmy Connect",
     department: "กรมการอุตสาหกรรมทหาร",
@@ -317,6 +322,7 @@ const initClients: ClientPerm[] = [
     ],
   },
   {
+    permissionId: "PRM-005",
     clientId: "CLT-005",
     clientName: "MapThai Military GIS",
     department: "กรมการอุตสาหกรรมทหาร",
@@ -336,6 +342,7 @@ const initClients: ClientPerm[] = [
     ],
   },
   {
+    permissionId: "PRM-006",
     clientId: "CLT-006",
     clientName: "HR-Defence System",
     department: "กรมการอุตสาหกรรมทหาร",
@@ -360,6 +367,7 @@ const initClients: ClientPerm[] = [
     ],
   },
   {
+    permissionId: "PRM-007",
     clientId: "CLT-007",
     clientName: "Intel Management App",
     department: "กรมการอุตสาหกรรมทหาร",
@@ -379,6 +387,7 @@ const initClients: ClientPerm[] = [
     ],
   },
   {
+    permissionId: "PRM-008",
     clientId: "CLT-008",
     clientName: "Procurement Portal",
     department: "กรมการอุตสาหกรรมทหาร",
@@ -447,6 +456,7 @@ function PermissionModal({
       ? buildModalRows(editClient.grants)
       : buildModalRows([]),
   );
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
 
   useEffect(() => {
     if (editClient) {
@@ -474,14 +484,14 @@ function PermissionModal({
 
   /* modal title */
   const title = isCreate
-    ? "เพิ่มสิทธิ์ใหม่"
+    ? "เพิ่มข้อมูลสิทธิ์บริการเชื่อมโยง"
     : isEdit
-      ? `แก้ไขสิทธิ์สำหรับ ${editClient?.clientName}`
-      : `รายละเอียดสิทธิ์สำหรับ ${editClient?.clientName}`;
+      ? `แก้ไขข้อมูลสิทธิ์บริการเชื่อมโยง`
+      : `รายละเอียดข้อมูลสิทธิ์บริการเชื่อมโยง`;
 
   /* header icon / badge color */
-  const headerColor = isView ? "#7C3AED" : NAVY;
-  const headerBg = isView ? "#F5F3FF" : "#EEF2FF";
+  const headerColor = NAVY;
+  const headerBg = "#EEF2FF";
 
   /* mode badge */
   const modeBadge = isCreate
@@ -552,11 +562,7 @@ function PermissionModal({
                 justifyContent: "center",
               }}
             >
-              {isView ? (
-                <Eye size={17} color={headerColor} />
-              ) : (
-                <ShieldCheck size={17} color={headerColor} />
-              )}
+              <ShieldCheck size={17} color={headerColor} />
             </div>
             <div>
               <div
@@ -575,19 +581,7 @@ function PermissionModal({
                 >
                   {title}
                 </span>
-                <span
-                  style={{
-                    fontSize: "10px",
-                    fontWeight: 700,
-                    backgroundColor: modeBadge.bg,
-                    color: modeBadge.color,
-                    padding: "2px 8px",
-                    borderRadius: "20px",
-                    letterSpacing: "0.02em",
-                  }}
-                >
-                  {modeBadge.label}
-                </span>
+   
               </div>
               <div
                 style={{
@@ -597,8 +591,8 @@ function PermissionModal({
                 }}
               >
                 {isCreate
-                  ? "เลือก Client และกำหนดสิทธิ์การเข้าถึงบริการ"
-                  : `Client ID: ${editClient?.clientId}`}
+                  ? "เลือกแอปพลิเคชัน และกำหนดสิทธิ์การเข้าถึงบริการ"
+                  : `Permission ID: ${editClient?.permissionId}`}
               </div>
             </div>
           </div>
@@ -606,23 +600,26 @@ function PermissionModal({
             onClick={onClose}
             onMouseEnter={(e) =>
               (e.currentTarget.style.backgroundColor =
-                "#F3F4F6")
+                "#E5E7EB")
             }
             onMouseLeave={(e) =>
               (e.currentTarget.style.backgroundColor =
-                "transparent")
+                "#F3F4F6")
             }
             style={{
-              background: "none",
+              background: "#F3F4F6",
               border: "none",
               cursor: "pointer",
-              color: "#9CA3AF",
-              padding: "4px",
+              color: "#6B7280",
+              padding: "6px",
               borderRadius: "6px",
+              display: "flex",
+              alignItems: "center",
+              flexShrink: 0,
               transition: "background-color 0.15s",
             }}
           >
-            <X size={20} />
+            <X size={16} />
           </button>
         </div>
 
@@ -645,7 +642,7 @@ function PermissionModal({
                 marginBottom: "7px",
               }}
             >
-              Client / แอปพลิเคชัน
+              แอปพลิเคชัน
               {isCreate && (
                 <span
                   style={{ color: DANGER, marginLeft: "2px" }}
@@ -678,7 +675,7 @@ function PermissionModal({
               }}
             >
               {isCreate && (
-                <option value="">-- เลือก Client --</option>
+                <option value="">-- เลือก แอปพลิเคชัน --</option>
               )}
               {CLIENT_OPTIONS.map((c) => (
                 <option key={c.clientId} value={c.clientId}>
@@ -696,7 +693,7 @@ function PermissionModal({
               >
                 {isView
                   ? "โหมดดูข้อมูลเท่านั้น — ไม่สามารถแก้ไขได้"
-                  : "ไม่สามารถเปลี่ยน Client ได้ในโหมดแก้ไข"}
+                  : "ไม่สามารถเปลี่ยน แอปพลิเคชัน ได้ในโหมดแก้ไข"}
               </p>
             )}
           </div>
@@ -773,8 +770,8 @@ function PermissionModal({
             >
               {[
                 "เลือก",
-                "ชื่อบริการ / Service ID",
-                "Provider",
+                "บริการ",
+                "หน่วยงาน",
                 "ถาวร",
                 "วันที่หมดอายุ",
                 ...(isView ? [] : [""]),
@@ -1002,9 +999,9 @@ function PermissionModal({
               : "space-between",
             gap: "10px",
             padding: "16px 24px",
-            borderTop: "1px solid #E5E7EB",
+            borderTop: isView ? "1px solid #F3F4F6" : "1px solid #E5E7EB",
             flexShrink: 0,
-            backgroundColor: "#FAFAFA",
+            backgroundColor: isView ? "white" : "#FAFAFA",
           }}
         >
           {/* Left: Delete button (Edit mode only) */}
@@ -1012,61 +1009,39 @@ function PermissionModal({
 
           {/* Right: action buttons */}
           <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              onClick={onClose}
-              style={{
-                padding: "9px 20px",
-                border: "1px solid #E5E7EB",
-                borderRadius: "8px",
-                backgroundColor: "white",
-                color: "#374151",
-                fontSize: "13px",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontFamily: FF,
-              }}
-            >
-              {isView ? "ปิด" : "ยกเลิก"}
-            </button>
+            {isView ? (
+              <Button onClick={onClose}>ปิด</Button>
+            ) : (
+              <Button variant="secondary" onClick={onClose}>ยกเลิก</Button>
+            )}
             {!isView && (
-              <button
-                onClick={() => {
-                  const id = isEdit
-                    ? editClient!.clientId
-                    : selectedClientId;
-                  if (!id) return;
-                  onSave(id, rows);
-                  onClose();
-                }}
+              <Button
+                icon={Save}
                 disabled={isCreate && !selectedClientId}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  padding: "9px 22px",
-                  border: "none",
-                  borderRadius: "8px",
-                  backgroundColor:
-                    isCreate && !selectedClientId
-                      ? "#CBD5E1"
-                      : NAVY,
-                  color: "white",
-                  fontSize: "13px",
-                  fontWeight: 600,
-                  cursor:
-                    isCreate && !selectedClientId
-                      ? "not-allowed"
-                      : "pointer",
-                  fontFamily: FF,
-                }}
+                onClick={() => setShowSaveConfirm(true)}
               >
-                <Save size={14} />
                 บันทึก
-              </button>
+              </Button>
             )}
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={showSaveConfirm}
+        onClose={() => setShowSaveConfirm(false)}
+        onConfirm={() => {
+          const id = isEdit ? editClient!.clientId : selectedClientId;
+          if (!id) return;
+          onSave(id, rows);
+          setShowSaveConfirm(false);
+          onClose();
+        }}
+        variant="success"
+        title={isEdit ? "ยืนยันการแก้ไขข้อมูล" : "ยืนยันการเพิ่มข้อมูล"}
+        message={isEdit ? "คุณต้องการแก้ไขข้อมูลหรือไม่?" : "คุณต้องการเพิ่มข้อมูลหรือไม่?"}
+        confirmLabel="ยืนยัน"
+      />
     </div>
   );
 }
@@ -1121,9 +1096,11 @@ export function Permissions() {
       const opt = CLIENT_OPTIONS.find(
         (o) => o.clientId === clientId,
       )!;
+      const nextNum = String(prev.length + 1).padStart(3, "0");
       return [
         ...prev,
         {
+          permissionId: `PRM-${nextNum}`,
           clientId: opt.clientId,
           clientName: opt.clientName,
           department: opt.department,
@@ -1146,6 +1123,7 @@ export function Permissions() {
     const q = search.toLowerCase();
     return (
       !q ||
+      c.permissionId.toLowerCase().includes(q) ||
       c.clientId.toLowerCase().includes(q) ||
       c.clientName.toLowerCase().includes(q) ||
       c.department.toLowerCase().includes(q)
@@ -1154,22 +1132,19 @@ export function Permissions() {
 
   const columns: Column<ClientPerm>[] = [
     {
-      key: "clientId",
-      header: "Client ID",
-      width: "110px",
+      key: "permissionId",
+      header: "Permission ID",
+      width: "120px",
       render: (row) => (
         <span
           style={{
             fontFamily: "monospace",
             fontSize: "12px",
-            fontWeight: 700,
-            color: NAVY,
-            backgroundColor: "#EEF2FF",
-            padding: "3px 8px",
-            borderRadius: "5px",
+            fontWeight: 400,
+            color: "#374151",
           }}
         >
-          {row.clientId}
+          {row.permissionId}
         </span>
       ),
     },
@@ -1180,7 +1155,7 @@ export function Permissions() {
         <div>
           <div
             style={{
-              fontWeight: 500,
+              fontWeight: 400,
               color: "#111827",
               fontSize: "13px",
               fontFamily: FF,
@@ -1266,6 +1241,7 @@ export function Permissions() {
             <div
               style={{
                 fontSize: "13px",
+                fontWeight: 400,
                 color: "#111827",
                 fontFamily: FF,
               }}
@@ -1372,7 +1348,7 @@ export function Permissions() {
               fontFamily: FF,
             }}
           >
-            จัดการสิทธิ์บริการเชื่อมโยง
+            จัดการสิทธิ์บริการเชื่อมโยง (Permissions)
           </h1>
           <p
             style={{
@@ -1382,12 +1358,11 @@ export function Permissions() {
               fontFamily: FF,
             }}
           >
-            คลิกตัวเลขจำนวน Services เพื่อดูรายละเอียด · คลิก
-            "แก้ไข" เพื่อจัดการสิทธิ์
+            ข้อมูลสิทธิ์การเข้าถึงบริการเชื่อมโยงข้อมูลของแต่ละแอปพลิเคชันในระบบ
           </p>
         </div>
         <Button icon={Plus} onClick={openCreate}>
-          เพิ่มสิทธิ์ใหม่
+          เพิ่มสิทธิ์บริการเชื่อมโยง
         </Button>
       </div>
 
@@ -1404,7 +1379,7 @@ export function Permissions() {
         {/* Search */}
         <div style={{ marginBottom: "16px" }}>
           <div
-            style={{ position: "relative", maxWidth: "380px" }}
+            style={{ position: "relative", width: "75%" }}
           >
             <Search
               size={15}
@@ -1419,7 +1394,7 @@ export function Permissions() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="ค้นหา Client ID, ชื่อแอปพลิเคชัน, หน่วยงาน..."
+              placeholder="ค้นหา Permission ID, ชื่อแอปพลิเคชัน, หน่วยงาน..."
               style={{
                 width: "100%",
                 height: "38px",
@@ -1463,8 +1438,8 @@ export function Permissions() {
           confirm && handleDelete(confirm.clientId)
         }
         title="ยืนยันการลบสิทธิ์"
-        message={`คุณต้องการลบสิทธิ์ทั้งหมดของ "${confirm?.clientName}" ออกจากระบบหรือไม่? Client จะไม่สามารถเข้าถึงบริการใดๆ ได้อีก`}
-        confirmLabel="ลบสิทธิ์ทั้งหมด"
+        message={`คุณต้องการลบสิทธิ์ทั้งหมดของ "${confirm?.clientName}" ออกจากระบบหรือไม่? แอปพลิเคชันจะไม่สามารถเข้าถึงบริการใดๆ ได้อีก`}
+        confirmLabel="ยืนยัน"
       />
     </div>
   );

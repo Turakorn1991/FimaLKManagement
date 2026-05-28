@@ -6,7 +6,7 @@ import {
   Shield,
   User,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const NAVY = "#003087";
 
@@ -18,6 +18,19 @@ interface NavbarProps {
 export function Navbar({ onToggleSidebar }: NavbarProps) {
   const [notifications] = useState(3);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setShowUserMenu(false);
+      }
+    }
+    if (showUserMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showUserMenu]);
 
   return (
     <header
@@ -121,7 +134,7 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
           gap: "8px",
         }}
       >
-        <div style={{ position: "relative" }}>
+        <div ref={userMenuRef} style={{ position: "relative" }}>
           <button
             onClick={() => setShowUserMenu(!showUserMenu)}
             onMouseEnter={(e) =>
@@ -198,7 +211,7 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
                 {
                   label: "ออกจากระบบ",
                   sub: "Sign out",
-                  danger: true,
+                  danger: false,
                 },
               ].map((item) => (
                 <button

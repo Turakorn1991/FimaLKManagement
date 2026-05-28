@@ -486,39 +486,27 @@ export function Services() {
       header: "หน่วยงาน",
       sortable: true,
       render: (row) => (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
+        <div>
           <div
             style={{
-              padding: "2px 7px",
-              borderRadius: "4px",
-              backgroundColor: "#1F2937",
-              color: "white",
-              fontSize: "9px",
+              fontSize: "13px",
+              fontWeight: 400,
+              color: "#111827",
+              fontFamily: "'Noto Sans Thai', 'Inter', sans-serif",
+            }}
+          >
+            {row.provider}
+          </div>
+          <div
+            style={{
+              fontSize: "11px",
+              color: "#6B7280",
+              marginTop: "2px",
               fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: "0.05em",
-              flexShrink: 0,
             }}
           >
             {row.providerCode}
           </div>
-          <span
-            style={{
-              fontSize: "13px",
-              fontWeight: 400,
-              color: "#374151",
-              fontFamily:
-                "'Noto Sans Thai', 'Inter', sans-serif",
-            }}
-          >
-            {row.provider}
-          </span>
         </div>
       ),
     },
@@ -905,7 +893,7 @@ export function Services() {
         onConfirm={() => confirm && handleDelete(confirm.id)}
         title="ยืนยันการลบบริการ"
         message={`คุณต้องการลบบริการ "${confirm?.name}" (${confirm?.id}) ออกจากระบบหรือไม่?`}
-        confirmLabel="ลบบริการ"
+        confirmLabel="ยืนยัน"
       />
 
       {/* Add/Edit Modal */}

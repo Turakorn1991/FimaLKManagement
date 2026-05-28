@@ -42,7 +42,7 @@ const navItems = [
   {
     path: "/permissions",
     icon: ShieldCheck,
-    label: "จัดการสิทธิ์",
+    label: "จัดการสิทธิ์บริการเชื่อมโยง",
     sub: "Permissions",
   },
   {
