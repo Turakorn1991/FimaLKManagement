@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   XCircle,
   BarChart2,
+  MonitorPause,
 } from "lucide-react";
 import {
   BarChart,
@@ -516,7 +517,7 @@ function SummaryCard({
             }}
           >
             <XCircle size={13} />
-            ล้มเหลว
+            ไม่สำเร็จ
           </div>
           <div
             style={{
@@ -587,7 +588,7 @@ function SummaryCard({
             fontFamily: FF,
           }}
         >
-          ล้มเหลว {failPct}%
+          ไม่สำเร็จ {failPct}%
         </span>
       </div>
     </div>
@@ -609,7 +610,7 @@ export function Dashboard() {
             fontFamily: FF,
           }}
         >
-          ภาพรวมระบบ
+          หน้าหลัก (Dashboard)
         </h1>
         <p
           style={{
@@ -619,7 +620,7 @@ export function Dashboard() {
             fontFamily: FF,
           }}
         >
-          Management Linkage Services Center · กรมอุตสาหกรรมทหาร (อท.)
+          ข้อมูลสรุปภาพรวมและสถิติการให้บริการข้อมูลและการเชื่อมโยงข้อมูลกับหน่วยงานต่างๆ ทั้งภาครัฐและเอกชน
         </p>
       </div>
 
@@ -633,25 +634,7 @@ export function Dashboard() {
         }}
       >
         <StatCard
-          title="Client ทั้งหมด"
-          value="47"
-          sub="แอปพลิเคชันที่ลงทะเบียน"
-          icon={MonitorSmartphone}
-          iconColor={NAVY}
-          iconBg="#EEF2FF"
-          trendUp={true}
-        />
-        <StatCard
-          title="Services ทั้งหมด"
-          value="128"
-          sub="บริการเชื่อมโยงที่เปิดใช้"
-          icon={Layers}
-          iconColor={TEAL}
-          iconBg="#F0FDFD"
-          trendUp={true}
-        />
-        <StatCard
-          title="Client ที่มี Permission"
+          title="แอปพลิเคชันที่มีสิทธิ์ใช้งาน"
           value="38"
           sub="มีสิทธิ์ใช้งานอย่างน้อย 1 บริการ"
           icon={ShieldCheck}
@@ -660,9 +643,27 @@ export function Dashboard() {
           trendUp={true}
         />
         <StatCard
+          title="บริการใบอนุญาต/หนังสืออนุญาต"
+          value="47"
+          sub="บริการใบอนุญาต/หนังสืออนุญาตทั้งหมด ของ อท."
+          icon={Layers}
+          iconColor={NAVY}
+          iconBg="#EEF2FF"
+          trendUp={true}
+        />
+        <StatCard
+          title="บริการเชื่อมโยงข้อมูล (Linkage II)"
+          value="128"
+          sub="บริการเชื่อมโยงทั้งหมดที่เปิดใช้ในระบบ"
+          icon={Layers}
+          iconColor={TEAL}
+          iconBg="#F0FDFD"
+          trendUp={true}
+        />
+        <StatCard
           title="Request ทั้งหมด"
           value="312,237"
-          sub="Services ของ อท."
+          sub="บริการใบอนุญาต/หนังสืออนุญาต ของ อท."
           icon={Activity}
           iconColor={NAVY}
           iconBg="#EEF2FF"
@@ -671,7 +672,7 @@ export function Dashboard() {
         <StatCard
           title="Request ทั้งหมด"
           value="423,287"
-          sub="Services Linkage2"
+          sub="บริการเชื่อมโยงข้อมูล (Linkage II)"
           icon={Activity}
           iconColor={TEAL}
           iconBg="#F0FDFD"
@@ -716,7 +717,7 @@ export function Dashboard() {
                     fontFamily: FF,
                   }}
                 >
-                  Top 5 Services ของ อท.
+                  Top 5 บริการใบอนุญาต/หนังสืออนุญาต ของ อท.
                 </h3>
                 <p
                   style={{
@@ -726,7 +727,7 @@ export function Dashboard() {
                     fontFamily: FF,
                   }}
                 >
-                  กรมอุตสาหกรรมทหาร · Request 7 วัน
+                  Request ทั้งหมด
                   เรียงจากสูงสุด
                 </p>
               </div>
@@ -861,7 +862,7 @@ export function Dashboard() {
                     fontFamily: FF,
                   }}
                 >
-                  Top 5 บริการ Linkage2
+                  Top 5 บริการเชื่อมโยงข้อมูล (Linkage II)
                 </h3>
                 <p
                   style={{
@@ -871,7 +872,7 @@ export function Dashboard() {
                     fontFamily: FF,
                   }}
                 >
-                  บริการเชื่อมโยงข้อมูล · Request 7 วัน
+                  Request ทั้งหมด
                   เรียงจากสูงสุด
                 </p>
               </div>
@@ -988,15 +989,15 @@ export function Dashboard() {
         }}
       >
         <SummaryCard
-          title="สรุป Request – Services ของ อท."
-          subtitle="เฉพาะบริการของกรมอุตสาหกรรมทหาร (อท.) · วันนี้"
+          title="สรุป Request – บริการใบอนุญาต/หนังสืออนุญาต ของ อท."
+          subtitle="รวมทุกบริการในระบบ"
           total={summaryOT.total}
           success={summaryOT.success}
           failure={summaryOT.failure}
         />
         <SummaryCard
-          title="สรุป Request – ทุก Services"
-          subtitle="รวมทุกบริการในระบบ Management Services Center · วันนี้"
+          title="สรุป Request – บริการเชื่อมโยงข้อมูล (Linkage II)"
+          subtitle="รวมทุกบริการในระบบ"
           total={summaryAll.total}
           success={summaryAll.success}
           failure={summaryAll.failure}
