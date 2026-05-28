@@ -148,7 +148,7 @@ export function Clients() {
           style={{
             fontFamily: "monospace",
             fontSize: "12px",
-            fontWeight: 600,
+            fontWeight: 400,
             color: "#374151",
           }}
         >
@@ -163,7 +163,7 @@ export function Clients() {
       render: (row) => (
         <span
           style={{
-            fontWeight: 500,
+            fontWeight: 400,
             color: "#111827",
             fontFamily: "'Noto Sans Thai', 'Inter', sans-serif",
           }}
@@ -176,6 +176,11 @@ export function Clients() {
       key: "department",
       header: "หน่วยงาน",
       sortable: true,
+      render: (row) => (
+        <span style={{ fontWeight: 400, color: "#111827" }}>
+          {row.department}
+        </span>
+      ),
     },
     {
       key: "status",
@@ -189,6 +194,11 @@ export function Clients() {
       header: "วันที่ลงทะเบียน",
       sortable: true,
       width: "150px",
+      render: (row) => (
+        <span style={{ fontWeight: 400, color: "#111827" }}>
+          {row.registeredAt}
+        </span>
+      ),
     },
   ];
 
@@ -250,7 +260,7 @@ export function Clients() {
             fontFamily: "'Noto Sans Thai', 'Inter', sans-serif",
           }}
         >
-          ข้อมูล Client ดึงมาจากระบบ SSO Management โดยอัตโนมัติ
+          ข้อมูลแอปพลิเคชัน ดึงมาจากระบบ SSO Management โดยอัตโนมัติ
           — ไม่สามารถเพิ่ม แก้ไข หรือลบได้จากระบบนี้
         </span>
       </div>
@@ -344,7 +354,7 @@ export function Clients() {
       >
         <div style={{ marginBottom: "16px" }}>
           <div
-            style={{ position: "relative", maxWidth: "380px" }}
+            style={{ position: "relative", width: "75%" }}
           >
             <Search
               size={15}
@@ -359,7 +369,7 @@ export function Clients() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="ค้นหา Client ID, ชื่อแอปพลิเคชัน, หน่วยงาน..."
+              placeholder="ค้นหา Client ID, แอปพลิเคชัน, หน่วยงาน..."
               style={{
                 width: "100%",
                 height: "38px",
