@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Edit2, Trash2 } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, Building2, Save } from "lucide-react";
 import { DataTable, Column } from "../components/DataTable";
 import { Button } from "../components/Button";
 import { Modal } from "../components/Modal";
@@ -466,6 +466,24 @@ export function Providers() {
 
   const columns: Column<Provider>[] = [
     {
+      key: "id",
+      header: "Provider ID",
+      sortable: true,
+      width: "120px",
+      render: (row) => (
+        <span
+          style={{
+            fontFamily: "monospace",
+            fontSize: "12px",
+            fontWeight: 400,
+            color: "#374151",
+          }}
+        >
+          {row.id}
+        </span>
+      ),
+    },
+    {
       key: "name",
       header: "หน่วยงาน",
       sortable: true,
@@ -499,7 +517,7 @@ export function Providers() {
           <div>
             <div
               style={{
-                fontWeight: 600,
+                fontWeight: 400,
                 color: "#111827",
                 fontSize: "13px",
                 fontFamily:
@@ -611,7 +629,7 @@ export function Providers() {
               style={{
                 fontSize: "13px",
                 color: "#111827",
-                fontWeight: 500,
+                fontWeight: 400,
                 fontFamily:
                   "'Noto Sans Thai', 'Inter', sans-serif",
               }}
@@ -623,6 +641,7 @@ export function Providers() {
                 fontSize: "11px",
                 color: "#6B7280",
                 marginTop: "2px",
+                fontWeight: 400,
                 fontFamily:
                   "'Noto Sans Thai', 'Inter', sans-serif",
               }}
@@ -750,7 +769,7 @@ export function Providers() {
       >
         <div style={{ marginBottom: "16px" }}>
           <div
-            style={{ position: "relative", maxWidth: "380px" }}
+            style={{ position: "relative", width: "75%" }}
           >
             <Search
               size={15}
@@ -765,7 +784,7 @@ export function Providers() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="ค้นหาหน่วยงาน, Code..."
+              placeholder="ค้นหา Provider ID, หน่วยงาน..."
               style={{
                 width: "100%",
                 height: "38px",
@@ -931,6 +950,13 @@ export function Providers() {
         title={
           editPrv ? "แก้ไขข้อมูลผู้ให้บริการ" : "เพิ่มข้อมูลผู้ให้บริการ"
         }
+        subtitle={
+          editPrv
+            ? `Provider ID: ${editPrv.id}`
+            : "เพิ่มหน่วยงานผู้ให้บริการข้อมูลใหม่"
+        }
+        icon={<Building2 size={17} color="#003087" />}
+        iconBg="#EEF2FF"
         size="md"
         footer={
           <>
@@ -940,8 +966,8 @@ export function Providers() {
             >
               ยกเลิก
             </Button>
-            <Button onClick={() => setShowModal(false)}>
-              {editPrv ? "บันทึก" : "เพิ่ม ผู้ให้บริการ"}
+            <Button icon={Save} onClick={() => setShowModal(false)}>
+              บันทึก
             </Button>
           </>
         }
@@ -992,7 +1018,7 @@ export function Providers() {
                   borderRadius: "8px",
                   fontSize: "13px",
                   fontFamily: "monospace",
-                  fontWeight: 700,
+                  fontWeight: 400,
                   outline: "none",
                   boxSizing: "border-box",
                   backgroundColor: "#FAFAFA",

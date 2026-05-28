@@ -346,7 +346,7 @@ export function AuditLog() {
           {/* ── Row 2: search + buttons ── */}
           <div style={{ gridColumn: "1 / 4", position: "relative" }}>
             <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
-            <input value={dSearch} onChange={(e) => setDSearch(e.target.value)} onKeyDown={(e) => e.key === "Enter" && applyFilters()} placeholder="ค้นหาLOG ID, ผู้ดำเนินการ, การกระทำ, เหตุการณ์..."
+            <input value={dSearch} onChange={(e) => setDSearch(e.target.value)} onKeyDown={(e) => e.key === "Enter" && applyFilters()} placeholder="ค้นหา Log ID, ผู้ดำเนินการ, การกระทำ, เหตุการณ์..."
               style={{ width: "100%", height: "38px", padding: "0 12px 0 36px", border: "1px solid #E5E7EB", borderRadius: "8px", fontSize: "13px", fontFamily: FF, outline: "none", boxSizing: "border-box" }} />
           </div>
           <button onClick={applyFilters} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#002470")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = CHART_COLOR)}

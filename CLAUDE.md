@@ -281,6 +281,52 @@ summaryAll = { total: 28_750, success: 27_340, failure: 1_410 }  // Linkage II
 
 ---
 
+### แอปพลิเคชัน (Clients)
+
+**File**: `src/app/pages/Clients.tsx` — **read-only** (no add/edit/delete).
+
+**Data** — 15 hardcoded mock clients (`CLT-001` … `CLT-015`); no CRUD mutations.
+
+**Page structure** (top to bottom):
+1. Blue info banner — `Info` icon + "ข้อมูลแอปพลิเคชัน ดึงมาจากระบบ SSO Management โดยอัตโนมัติ — ไม่สามารถเพิ่ม แก้ไข หรือลบได้จากระบบนี้"
+2. Filter chips row — `ทั้งหมด` / `เปิดใช้งาน` / `ปิดใช้งาน` with live count badge; active chip highlights with matching color
+3. White card — search input (`width: "75%"`) + `DataTable`
+
+**Columns** — Client ID (110px, monospace, `fontWeight 400`) → แอปพลิเคชัน (auto, `fontWeight 400`) → หน่วยงาน (auto, `fontWeight 400`) → สถานะ (120px, center, `StatusBadge`) → วันที่ลงทะเบียน (150px, sortable, `fontWeight 400`)
+
+**Font weight rule**: all `<td>` data `fontWeight: 400` — no bold text in this table (no clickable elements in rows).
+
+---
+
+### ผู้ให้บริการ (Providers)
+
+**File**: `src/app/pages/Providers.tsx` — full CRUD (add / edit / delete).
+
+**Data** — 12 mock providers (`PRV-001` … `PRV-012`): DOTI, DOPA, RD, DBD, DIW, DPIM, IEAT, DOL, DMF, RTP, LED, DL. Each provider has a `mockServices` array (25 services total) used for the service-list modal.
+
+**Columns** — Provider ID (120px, monospace, sortable, `fontWeight 400`) → หน่วยงาน (auto) → จำนวนบริการ (150px, center) → อัปเดตล่าสุด (200px) → จัดการ (90px, center)
+
+**Font weight rule**: all static data `fontWeight: 400`. Exceptions that stay bold:
+- Code badge (navy 38×38 box inside หน่วยงาน column): `fontWeight 700` — visual identifier, not text data
+- "N บริการ" pill button: `fontWeight 700` — clickable, opens service list
+
+**หน่วยงาน column** — navy badge (38×38, `#003087`, monospace, `fontWeight 700`) + name text (`fontWeight 400`) + description sub-text (`fontSize 11px`, `#6B7280`)
+
+**อัปเดตล่าสุด column** — date/time derived from `row.updatedAt` (year replaced 2568→2569) + time from `T[]` pool; sub-text "โดย {row.updatedBy}" — both `fontWeight 400`
+
+**จำนวนบริการ button** — indigo pill (`#EEF2FF` / `#4338CA`), hover `#C7D2FE`; opens service-list Modal (`size="md"`) showing all services of that provider
+
+**Add/Edit Modal** (`showModal`)
+- `icon={<Building2 size={17} color="#003087" />}` `iconBg="#EEF2FF"`
+- `title`: "เพิ่มข้อมูลผู้ให้บริการ" / "แก้ไขข้อมูลผู้ให้บริการ"
+- `subtitle`: "เพิ่มหน่วยงานผู้ให้บริการข้อมูลใหม่เข้าสู่ระบบ" (add) / `` `Provider ID: ${editPrv.id}` `` (edit)
+- Form fields: Code (monospace, `fontWeight 400`, maxLength 6, toUpperCase) + ชื่อหน่วยงาน + อีเมลผู้ดูแล + คำอธิบาย
+- Footer: ยกเลิก (secondary) · บันทึก (`icon={Save}`, primary)
+
+**Delete** — `ConfirmDialog` wrapping `Modal`; removes provider from local `useState` array.
+
+---
+
 ### Styling Conventions
 
 All pages use **inline styles** (not Tailwind classes). Consistent design tokens used throughout:
