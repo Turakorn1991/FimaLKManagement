@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from "react-router";
 import {
-  LayoutDashboard,
+  Home,
   Building2,
   MonitorSmartphone,
   Layers,
@@ -8,7 +8,6 @@ import {
   GitBranch,
   FileSearch,
   ClipboardList,
-  ChevronRight,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -18,13 +17,13 @@ interface SidebarProps {
 const navItems = [
   {
     path: "/",
-    icon: LayoutDashboard,
+    icon: Home,
     label: "หน้าหลัก",
     sub: "Dashboard",
   },
   {
     path: "/clients",
-    icon: Building2,
+    icon: MonitorSmartphone,
     label: "แอปพลิเคชัน",
     sub: "Clients",
   },
@@ -49,20 +48,20 @@ const navItems = [
   {
     path: "/log-linkage",
     icon: GitBranch,
-    label: "Log Linkage2",
-    sub: "Logs",
+    label: "ประวัติการเชื่อมโยง Linkage",
+    sub: "Linkage Logs",
   },
   {
     path: "/log-license",
     icon: FileSearch,
-    label: "Log หนังสือ อท.",
-    sub: "Logs",
+    label: "ประวัติการให้บริการข้อมูล อท.",
+    sub: "License Logs",
   },
   {
     path: "/audit",
     icon: ClipboardList,
-    label: "Audit Log ระบบ",
-    sub: "Audit",
+    label: "ประวัติการใช้งานระบบ",
+    sub: "Audit Logs",
   },
 ];
 
@@ -183,13 +182,6 @@ export function Sidebar({ collapsed }: SidebarProps) {
                     </div>
                   </div>
                 )}
-                {!collapsed && active && (
-                  <ChevronRight
-                    size={13}
-                    color="rgba(255,255,255,0.35)"
-                    style={{ flexShrink: 0 }}
-                  />
-                )}
               </div>
             </NavLink>
           );
@@ -210,8 +202,8 @@ export function Sidebar({ collapsed }: SidebarProps) {
               lineHeight: 1.6,
             }}
           >
-            <div>Management Services Center</div>
-            <div>v2.1.0 · กรมอุตสาหกรรมทหาร (อท.)</div>
+            <div>Management Linkage Services Center (V1.0.0)</div>
+            <div>กรมอุตสาหกรรมทหาร (อท.)</div>
           </div>
         </div>
       )}

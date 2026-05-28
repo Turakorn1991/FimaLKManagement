@@ -204,7 +204,8 @@ export function DataTable<T>({
                         style={{
                           padding: "12px 16px",
                           fontSize: "13px",
-                          color: "#374151",
+                          fontWeight: 500,
+                          color: "#111827",
                           textAlign: col.align || "left",
                           verticalAlign: "middle",
                           overflow: "hidden",

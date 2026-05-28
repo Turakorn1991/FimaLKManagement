@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router";
 import { Plus, Search, Edit2, Trash2 } from "lucide-react";
-import { Breadcrumb } from "../components/Breadcrumb";
 import { DataTable, Column } from "../components/DataTable";
 import { ToggleSwitch } from "../components/ToggleSwitch";
 import { Button } from "../components/Button";
@@ -443,7 +442,7 @@ export function Services() {
             fontFamily: "monospace",
             fontSize: "12px",
             fontWeight: 700,
-            color: "#003087",
+            color: "#374151",
             letterSpacing: "0.02em",
           }}
         >
@@ -453,7 +452,7 @@ export function Services() {
     },
     {
       key: "name",
-      header: "ชื่อบริการ",
+      header: "บริการ",
       sortable: true,
       render: (row) => (
         <div>
@@ -470,7 +469,7 @@ export function Services() {
           <div
             style={{
               fontSize: "11px",
-              color: "#9CA3AF",
+              color: "#6B7280",
               marginTop: "1px",
               fontFamily:
                 "'Noto Sans Thai', 'Inter', sans-serif",
@@ -483,7 +482,7 @@ export function Services() {
     },
     {
       key: "provider",
-      header: "Provider / หน่วยงาน",
+      header: "หน่วยงาน",
       sortable: true,
       render: (row) => (
         <div
@@ -525,33 +524,38 @@ export function Services() {
       key: "updatedAt",
       header: "อัปเดตล่าสุด",
       sortable: true,
-      width: "260px",
-      render: (row) => (
-        <div>
-          <div
-            style={{
-              fontSize: "13px",
-              color: "#111827",
-              fontWeight: 500,
-              fontFamily:
-                "'Noto Sans Thai', 'Inter', sans-serif",
-            }}
-          >
-            {row.updatedAt}
+      width: "200px",
+      render: (row) => {
+        const T = ["08:15","09:30","10:45","11:20","13:00","14:22","15:10","16:35"];
+        const time = T[parseInt(row.updatedAt) % T.length];
+        const dateStr = row.updatedAt.replace("2568","2569");
+        return (
+          <div>
+            <div
+              style={{
+                fontSize: "13px",
+                color: "#111827",
+                fontWeight: 500,
+                fontFamily:
+                  "'Noto Sans Thai', 'Inter', sans-serif",
+              }}
+            >
+              {dateStr}, {time} น.
+            </div>
+            <div
+              style={{
+                fontSize: "11px",
+                color: "#6B7280",
+                marginTop: "2px",
+                fontFamily:
+                  "'Noto Sans Thai', 'Inter', sans-serif",
+              }}
+            >
+              โดย {row.updatedBy}
+            </div>
           </div>
-          <div
-            style={{
-              fontSize: "11px",
-              color: "#6B7280",
-              marginTop: "2px",
-              fontFamily:
-                "'Noto Sans Thai', 'Inter', sans-serif",
-            }}
-          >
-            โดย {row.updatedBy}
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       key: "isActive",
@@ -653,7 +657,7 @@ export function Services() {
 
   return (
     <div>
-      <div
+<div
         style={{
           display: "flex",
           alignItems: "flex-start",
@@ -823,7 +827,8 @@ export function Services() {
               placeholder="ค้นหา Service ID, ชื่อบริการ, Provider..."
               style={{
                 width: "100%",
-                padding: "8px 12px 8px 36px",
+                height: "38px",
+                padding: "0 12px 0 36px",
                 border: "1px solid #E5E7EB",
                 borderRadius: "8px",
                 fontSize: "13px",
@@ -838,7 +843,8 @@ export function Services() {
             value={providerFilter}
             onChange={(e) => setProviderFilter(e.target.value)}
             style={{
-              padding: "8px 12px",
+              height: "38px",
+              padding: "0 12px",
               border: "1px solid #E5E7EB",
               borderRadius: "8px",
               fontSize: "13px",
@@ -846,7 +852,9 @@ export function Services() {
                 "'Noto Sans Thai', 'Inter', sans-serif",
               outline: "none",
               backgroundColor: "white",
+              color: "#374151",
               cursor: "pointer",
+              boxSizing: "border-box",
             }}
           >
             <option value="all">Provider ทั้งหมด</option>
@@ -959,7 +967,8 @@ export function Services() {
                 }
                 style={{
                   width: "100%",
-                  padding: "9px 12px",
+                  height: "38px",
+                  padding: "0 12px",
                   border: "1px solid #E5E7EB",
                   borderRadius: "8px",
                   fontSize: "13px",
@@ -968,6 +977,7 @@ export function Services() {
                   outline: "none",
                   backgroundColor: "#FAFAFA",
                   cursor: "pointer",
+                  boxSizing: "border-box",
                 }}
               >
                 {providers.map((p) => (
@@ -1049,7 +1059,8 @@ export function Services() {
               placeholder="ระบุชื่อบริการ"
               style={{
                 width: "100%",
-                padding: "9px 12px",
+                height: "38px",
+                padding: "0 12px",
                 border: "1px solid #E5E7EB",
                 borderRadius: "8px",
                 fontSize: "13px",

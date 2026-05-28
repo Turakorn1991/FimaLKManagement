@@ -98,7 +98,7 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
                 lineHeight: 1.2,
               }}
             >
-              Management Services Center
+              Management Linkage Services Center
             </div>
             <div
               style={{

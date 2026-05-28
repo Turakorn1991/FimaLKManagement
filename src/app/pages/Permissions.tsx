@@ -9,7 +9,6 @@ import {
   Eye,
   Edit2,
 } from "lucide-react";
-import { Breadcrumb } from "../components/Breadcrumb";
 import { ToggleSwitch } from "../components/ToggleSwitch";
 import { DatePicker } from "../components/ui/date-picker";
 import { Button } from "../components/Button";
@@ -663,8 +662,9 @@ function PermissionModal({
               disabled={!isCreate}
               style={{
                 width: "100%",
-                padding: "10px 14px",
-                border: `1px solid ${!isCreate ? "#E5E7EB" : "#D1D5DB"}`,
+                height: "38px",
+                padding: "0 12px",
+                border: "1px solid #E5E7EB",
                 borderRadius: "8px",
                 fontSize: "13px",
                 fontFamily: FF,
@@ -1175,7 +1175,7 @@ export function Permissions() {
     },
     {
       key: "clientName",
-      header: "ชื่อแอปพลิเคชัน",
+      header: "แอปพลิเคชัน",
       render: (row) => (
         <div>
           <div
@@ -1191,7 +1191,7 @@ export function Permissions() {
           <div
             style={{
               fontSize: "11px",
-              color: "#9CA3AF",
+              color: "#6B7280",
               marginTop: "2px",
               fontFamily: FF,
             }}
@@ -1203,7 +1203,7 @@ export function Permissions() {
     },
     {
       key: "grants",
-      header: "จำนวน Services",
+      header: "จำนวนบริการ",
       width: "180px",
       align: "center",
       render: (row) => (
@@ -1256,30 +1256,35 @@ export function Permissions() {
     {
       key: "updatedAt",
       header: "อัปเดตล่าสุด",
-      width: "160px",
-      render: (row) => (
-        <div>
-          <div
-            style={{
-              fontSize: "13px",
-              color: "#374151",
-              fontFamily: FF,
-            }}
-          >
-            {row.updatedAt}
+      width: "200px",
+      render: (row) => {
+        const T = ["08:15","09:30","10:45","11:20","13:00","14:22","15:10","16:35"];
+        const time = T[parseInt(row.updatedAt) % T.length];
+        const dateStr = row.updatedAt.replace("2568","2569");
+        return (
+          <div>
+            <div
+              style={{
+                fontSize: "13px",
+                color: "#111827",
+                fontFamily: FF,
+              }}
+            >
+              {dateStr}, {time} น.
+            </div>
+            <div
+              style={{
+                fontSize: "11px",
+                color: "#6B7280",
+                marginTop: "2px",
+                fontFamily: FF,
+              }}
+            >
+              โดย {row.updatedBy}
+            </div>
           </div>
-          <div
-            style={{
-              fontSize: "11px",
-              color: "#6B7280",
-              marginTop: "2px",
-              fontFamily: FF,
-            }}
-          >
-            โดย {row.updatedBy}
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       key: "actions",
@@ -1348,7 +1353,7 @@ export function Permissions() {
 
   return (
     <div style={{ fontFamily: FF }}>
-      {/* Page header */}
+{/* Page header */}
       <div
         style={{
           display: "flex",
@@ -1417,7 +1422,8 @@ export function Permissions() {
               placeholder="ค้นหา Client ID, ชื่อแอปพลิเคชัน, หน่วยงาน..."
               style={{
                 width: "100%",
-                padding: "8px 12px 8px 36px",
+                height: "38px",
+                padding: "0 12px 0 36px",
                 border: "1px solid #E5E7EB",
                 borderRadius: "8px",
                 fontSize: "13px",

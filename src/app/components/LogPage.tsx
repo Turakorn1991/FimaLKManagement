@@ -7,6 +7,8 @@ import {
   FileSpreadsheet,
   ImageDown,
   RotateCcw,
+  SlidersHorizontal,
+  AlertTriangle,
 } from "lucide-react";
 import {
   BarChart,
@@ -18,7 +20,6 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { Breadcrumb } from "./Breadcrumb";
 import { DataTable, Column } from "./DataTable";
 import { Button } from "./Button";
 import { Modal } from "./Modal";
@@ -40,12 +41,14 @@ export interface LogEntry {
 
 interface LogPageProps {
   title: string;
+  subtitle?: string;
   breadcrumbLabel: string;
   chartTitle: string;
   logs: LogEntry[];
   chartColor: string;
   clientOptions: string[];
   serviceOptions: string[];
+  searchPlaceholder?: string;
 }
 
 const THAI_MONTHS: Record<string, string> = {
@@ -180,12 +183,14 @@ const statusColor = (code: number) => {
 
 export function LogPage({
   title,
+  subtitle = "ข้อมูลประวัติการให้บริการข้อมูลใบอนุญาต/หนังสืออนุญาต ของ กรมการอุตสาหกรรมทหาร บน LinkageII",
   breadcrumbLabel,
   chartTitle,
   logs,
   chartColor,
   clientOptions,
   serviceOptions,
+  searchPlaceholder = "ค้นหา Log ID, แอปพลิเคชัน, บริการ...",
 }: LogPageProps) {
   const today = new Date().toISOString().split("T")[0];
   const todayMinus7Days = new Date();
@@ -370,15 +375,15 @@ export function LogPage({
   const columns: Column<LogEntry>[] = [
     {
       key: "id",
-      header: "Log ID",
+      header: "LOG ID",
       width: "130px",
       sortable: true,
       render: (row) => (
         <span
           style={{
             fontFamily: "monospace",
-            fontSize: "12px",
-            fontWeight: 600,
+            fontSize: "13px",
+            fontWeight: 500,
             color: "#374151",
           }}
         >
@@ -388,7 +393,7 @@ export function LogPage({
     },
     {
       key: "timestamp",
-      header: "เวลา",
+      header: "วัน-เวลา",
       width: "185px",
       sortable: true,
     },
@@ -401,8 +406,7 @@ export function LogPage({
             style={{
               fontWeight: 500,
               color: "#111827",
-              fontFamily:
-                "'Noto Sans Thai', 'Inter', sans-serif",
+              fontFamily: "'Noto Sans Thai', 'Inter', sans-serif",
             }}
           >
             {row.client}
@@ -410,7 +414,7 @@ export function LogPage({
           <div
             style={{
               fontSize: "10px",
-              color: "#9CA3AF",
+              color: "#6B7280",
               fontFamily: "monospace",
             }}
           >
@@ -429,8 +433,7 @@ export function LogPage({
             style={{
               fontWeight: 500,
               color: "#111827",
-              fontFamily:
-                "'Noto Sans Thai', 'Inter', sans-serif",
+              fontFamily: "'Noto Sans Thai', 'Inter', sans-serif",
             }}
           >
             {row.service}
@@ -438,7 +441,7 @@ export function LogPage({
           <div
             style={{
               fontSize: "10px",
-              color: "#9CA3AF",
+              color: "#6B7280",
               fontFamily: "monospace",
             }}
           >
@@ -448,9 +451,50 @@ export function LogPage({
       ),
     },
     {
-      key: "statusCode",
+      key: "status",
       header: "สถานะ",
-      width: "75px",
+      width: "118px",
+      align: "center",
+      render: (row) => {
+        const ok = row.statusCode >= 200 && row.statusCode < 300;
+        return (
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "5px",
+              padding: "3px 9px",
+              minWidth: "82px",
+              borderRadius: "20px",
+              backgroundColor: ok ? "#ECFDF5" : "#FEF2F2",
+              color: ok ? "#059669" : "#DC2626",
+              border: `1px solid ${ok ? "#A7F3D0" : "#FECACA"}`,
+              fontSize: "11px",
+              fontWeight: 600,
+              fontFamily: "'Noto Sans Thai', 'Inter', sans-serif",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <span
+              style={{
+                width: "5px",
+                height: "5px",
+                borderRadius: "50%",
+                backgroundColor: ok ? "#059669" : "#DC2626",
+                display: "inline-block",
+                flexShrink: 0,
+              }}
+            />
+            {ok ? "สำเร็จ" : "ไม่สำเร็จ"}
+          </span>
+        );
+      },
+    },
+    {
+      key: "statusCode",
+      header: "HTTP Status Code",
+      width: "90px",
       align: "center",
       render: (row) => {
         const cfg = statusColor(row.statusCode);
@@ -461,7 +505,7 @@ export function LogPage({
               color: cfg.color,
               border: `1px solid ${cfg.border}`,
               borderRadius: "20px",
-              padding: "2px 7px",
+              padding: "2px 8px",
               fontSize: "12px",
               fontWeight: 700,
               fontFamily: "monospace",
@@ -479,9 +523,10 @@ export function LogPage({
       render: (row) => (
         <span
           style={{
-            fontSize: "11px",
+            fontSize: "13px",
+            fontWeight: 500,
             fontFamily: "monospace",
-            color: "#6B7280",
+            color: "#374151",
           }}
         >
           {row.ipAddress}
@@ -490,40 +535,44 @@ export function LogPage({
     },
     {
       key: "detail",
-      header: "",
+      header: "#",
       width: "44px",
       align: "center",
       render: (row) => (
-        <button
-          onClick={() => setSelectedLog(row)}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#EEF2FF";
-            e.currentTarget.style.borderColor = "#C7D2FE";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "white";
-            e.currentTarget.style.borderColor = "#E5E7EB";
-          }}
-          style={{
-            padding: "5px",
-            border: "1px solid #E5E7EB",
-            borderRadius: "6px",
-            background: "white",
-            cursor: "pointer",
-            color: "#003087",
-            transition:
-              "background-color 0.15s, border-color 0.15s",
-          }}
-        >
-          <Eye size={13} />
-        </button>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button
+            onClick={() => setSelectedLog(row)}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#EEF2FF";
+              e.currentTarget.style.borderColor = "#C7D2FE";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "white";
+              e.currentTarget.style.borderColor = "#E5E7EB";
+            }}
+            style={{
+              padding: "5px",
+              border: "1px solid #E5E7EB",
+              borderRadius: "6px",
+              background: "white",
+              cursor: "pointer",
+              color: "#003087",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "background-color 0.15s, border-color 0.15s",
+            }}
+          >
+            <Eye size={13} />
+          </button>
+        </div>
       ),
     },
   ];
 
   return (
     <div>
-      <div
+<div
         style={{
           display: "flex",
           alignItems: "flex-start",
@@ -553,7 +602,7 @@ export function LogPage({
                 "'Noto Sans Thai', 'Inter', sans-serif",
             }}
           >
-            ค้นหา กรอง และวิเคราะห์ Log การใช้งาน
+            {subtitle}
           </p>
         </div>
         <div />
@@ -570,136 +619,252 @@ export function LogPage({
           marginBottom: "16px",
         }}
       >
+        {/* Header */}
         <div
           style={{
-            fontSize: "12px",
-            fontWeight: 600,
-            color: "#374151",
-            marginBottom: "12px",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-            fontFamily: "Inter, sans-serif",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            marginBottom: "16px",
+            paddingBottom: "14px",
+            borderBottom: "1px solid #F3F4F6",
           }}
         >
-          ตัวกรองข้อมูล
+          <div
+            style={{
+              width: "28px",
+              height: "28px",
+              borderRadius: "7px",
+              backgroundColor: "#EEF2FF",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <SlidersHorizontal size={14} color="#4338CA" />
+          </div>
+          <span
+            style={{
+              fontSize: "13px",
+              fontWeight: 700,
+              color: "#111827",
+              fontFamily: "'Noto Sans Thai', 'Inter', sans-serif",
+            }}
+          >
+            ตัวกรองข้อมูล
+          </span>
         </div>
+
         {/* Row 1: date + dropdowns */}
         <div
           style={{
             display: "grid",
-            width: "100%",
             gridTemplateColumns: "repeat(12, 1fr)",
-            gap: "8px",
-            flexWrap: "wrap",
+            gap: "10px",
             alignItems: "flex-end",
-            marginBottom: "10px",
+            marginBottom: "14px",
           }}
         >
           {/* Date range */}
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              flex: "0 0 auto",
               gridColumn: "span 3",
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
             }}
           >
-            <div style={{ width: "50%" }}>
-              <DatePicker
-                value={dFrom}
-                onChange={(e) => setDFrom(e.target.value)}
-                placeholder="วันเริ่มต้น"
-              />
-            </div>
-            <span
-              style={{ fontSize: "12px", color: "#9CA3AF" }}
+            <label
+              style={{
+                fontSize: "11px",
+                fontWeight: 600,
+                color: "#4B5563",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                fontFamily: "Inter, sans-serif",
+              }}
             >
-              ถึง
-            </span>
-            <div style={{ width: "50%" }}>
-              <DatePicker
-                value={dTo}
-                onChange={(e) => setDTo(e.target.value)}
-                placeholder="วันสิ้นสุด"
-                min={dFrom || undefined}
-              />
+              ช่วงวันที่
+            </label>
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "6px" }}
+            >
+              <div style={{ flex: 1 }}>
+                <DatePicker
+                  value={dFrom}
+                  onChange={(e) => setDFrom(e.target.value)}
+                  placeholder="วันเริ่มต้น"
+                />
+              </div>
+              <span
+                style={{ fontSize: "12px", color: "#D1D5DB", flexShrink: 0 }}
+              >
+                —
+              </span>
+              <div style={{ flex: 1 }}>
+                <DatePicker
+                  value={dTo}
+                  onChange={(e) => setDTo(e.target.value)}
+                  placeholder="วันสิ้นสุด"
+                  min={dFrom || undefined}
+                />
+              </div>
             </div>
           </div>
+
           {/* Client */}
-          <select
-            value={dClient}
-            onChange={(e) => setDClient(e.target.value)}
+          <div
             style={{
-              padding: "8px 10px",
-              border: "1px solid #E5E7EB",
-              borderRadius: "8px",
-              fontSize: "12px",
-              fontFamily:
-                "'Noto Sans Thai', 'Inter', sans-serif",
-              outline: "none",
-              backgroundColor: "white",
-              cursor: "pointer",
               gridColumn: "span 3",
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
             }}
           >
-            <option>แอปพลิเคชัน ทั้งหมด</option>
-            {clientOptions.map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </select>
+            <label
+              style={{
+                fontSize: "11px",
+                fontWeight: 600,
+                color: "#4B5563",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                fontFamily: "Inter, sans-serif",
+              }}
+            >
+              แอปพลิเคชัน
+            </label>
+            <select
+              value={dClient}
+              onChange={(e) => setDClient(e.target.value)}
+              style={{
+                width: "100%",
+                height: "38px",
+                padding: "0 12px",
+                border: "1px solid #E5E7EB",
+                borderRadius: "8px",
+                fontSize: "13px",
+                fontFamily: "'Noto Sans Thai', 'Inter', sans-serif",
+                outline: "none",
+                backgroundColor: "white",
+                cursor: "pointer",
+                color: "#374151",
+                boxSizing: "border-box",
+              }}
+            >
+              <option>แอปพลิเคชัน ทั้งหมด</option>
+              {clientOptions.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+
           {/* Service */}
-          <select
-            value={dService}
-            onChange={(e) => setDService(e.target.value)}
+          <div
             style={{
-              flex: 1,
-              minWidth: "150px",
-              padding: "8px 10px",
-              border: "1px solid #E5E7EB",
-              borderRadius: "8px",
-              fontSize: "12px",
-              fontFamily:
-                "'Noto Sans Thai', 'Inter', sans-serif",
-              outline: "none",
-              backgroundColor: "white",
-              cursor: "pointer",
-              gridColumn: "span 5",
+              gridColumn: "span 4",
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
             }}
           >
-            <option>บริการ ทั้งหมด</option>
-            {serviceOptions.map((s) => (
-              <option key={s}>{s}</option>
-            ))}
-          </select>
+            <label
+              style={{
+                fontSize: "11px",
+                fontWeight: 600,
+                color: "#4B5563",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                fontFamily: "Inter, sans-serif",
+              }}
+            >
+              บริการ
+            </label>
+            <select
+              value={dService}
+              onChange={(e) => setDService(e.target.value)}
+              style={{
+                width: "100%",
+                height: "38px",
+                padding: "0 12px",
+                border: "1px solid #E5E7EB",
+                borderRadius: "8px",
+                fontSize: "13px",
+                fontFamily: "'Noto Sans Thai', 'Inter', sans-serif",
+                outline: "none",
+                backgroundColor: "white",
+                cursor: "pointer",
+                color: "#374151",
+                boxSizing: "border-box",
+              }}
+            >
+              <option>บริการ ทั้งหมด</option>
+              {serviceOptions.map((s) => (
+                <option key={s}>{s}</option>
+              ))}
+            </select>
+          </div>
+
           {/* Status */}
-          <select
-            value={dStatus}
-            onChange={(e) => setDStatus(e.target.value)}
+          <div
             style={{
-              flex: "0 0 auto",
-              padding: "8px 10px",
-              border: "1px solid #E5E7EB",
-              borderRadius: "8px",
-              fontSize: "12px",
-              fontFamily:
-                "'Noto Sans Thai', 'Inter', sans-serif",
-              outline: "none",
-              backgroundColor: "white",
-              cursor: "pointer",
+              gridColumn: "span 2",
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
             }}
           >
-            <option>สถานะ ทั้งหมด</option>
-            <option>สำเร็จ</option>
-            <option>ผิดพลาด</option>
-          </select>
+            <label
+              style={{
+                fontSize: "11px",
+                fontWeight: 600,
+                color: "#4B5563",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                fontFamily: "Inter, sans-serif",
+              }}
+            >
+              สถานะ
+            </label>
+            <select
+              value={dStatus}
+              onChange={(e) => setDStatus(e.target.value)}
+              style={{
+                width: "100%",
+                height: "38px",
+                padding: "0 12px",
+                border: "1px solid #E5E7EB",
+                borderRadius: "8px",
+                fontSize: "13px",
+                fontFamily: "'Noto Sans Thai', 'Inter', sans-serif",
+                outline: "none",
+                backgroundColor: "white",
+                cursor: "pointer",
+                color: "#374151",
+                boxSizing: "border-box",
+              }}
+            >
+              <option>สถานะ ทั้งหมด</option>
+              <option>สำเร็จ</option>
+              <option>ไม่สำเร็จ</option>
+            </select>
+          </div>
         </div>
+
+        {/* Divider */}
+        <div
+          style={{
+            height: "1px",
+            backgroundColor: "#F3F4F6",
+            marginBottom: "14px",
+          }}
+        />
 
         {/* Row 2: search text + action buttons */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(12, 1fr)",
+            gridTemplateColumns: "1fr auto auto",
             width: "100%",
             gap: "8px",
             alignItems: "center",
@@ -708,8 +873,6 @@ export function LogPage({
           <div
             style={{
               position: "relative",
-              flex: 1,
-              gridColumn: "span 10",
             }}
           >
             <Search
@@ -728,10 +891,11 @@ export function LogPage({
               onKeyDown={(e) =>
                 e.key === "Enter" && applyFilters()
               }
-              placeholder="ค้นหา Log ID, Client, บริการ..."
+              placeholder={searchPlaceholder}
               style={{
                 width: "100%",
-                padding: "8px 12px 8px 36px",
+                height: "38px",
+                padding: "0 12px 0 36px",
                 border: "1px solid #E5E7EB",
                 borderRadius: "8px",
                 fontSize: "13px",
@@ -756,7 +920,7 @@ export function LogPage({
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
-              padding: "8px 20px",
+              padding: "9px 20px",
               backgroundColor: "#003087",
               color: "white",
               border: "none",
@@ -789,7 +953,7 @@ export function LogPage({
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
-              padding: "8px 16px",
+              padding: "9px 20px",
               backgroundColor: "#F9FAFB",
               color: "#6B7280",
               border: "1px solid #D1D5DB",
@@ -840,7 +1004,7 @@ export function LogPage({
               bg: "#ECFDF5",
             },
             {
-              label: "ผิดพลาด (4xx/5xx)",
+              label: "ไม่สำเร็จ (4xx/5xx)",
               value: errorCount.toLocaleString(),
               color: "#DC2626",
               bg: "#FEF2F2",
@@ -1098,22 +1262,15 @@ export function LogPage({
                 "'Noto Sans Thai', 'Inter', sans-serif",
             }}
           >
-            รายการ Log
+            รายการข้อมูล Log
           </div>
           <div style={{ display: "flex", gap: "8px" }}>
             <Button
               icon={FileSpreadsheet}
-              variant="secondary"
+              variant="success"
               size="sm"
             >
               Export Excel
-            </Button>
-            <Button
-              icon={Download}
-              variant="secondary"
-              size="sm"
-            >
-              Export CSV
             </Button>
           </div>
         </div>
@@ -1212,6 +1369,53 @@ export function LogPage({
                 </div>
               ))}
             </div>
+            {selectedLog.statusCode >= 400 && (() => {
+              let errMsg = "—";
+              try {
+                const parsed = JSON.parse(selectedLog.responseBody);
+                errMsg = parsed.message ?? "—";
+              } catch {}
+              return (
+                <div
+                  style={{
+                    backgroundColor: "#FEF2F2",
+                    border: "1px solid #FECACA",
+                    borderRadius: "8px",
+                    padding: "14px 16px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      fontSize: "12px",
+                      fontWeight: 700,
+                      color: "#DC2626",
+                      fontFamily: "Inter, sans-serif",
+                    }}
+                  >
+                    <AlertTriangle size={14} />
+                    ข้อมูลข้อผิดพลาด
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      color: "#7F1D1D",
+                      fontFamily:
+                        "'Noto Sans Thai', 'Inter', sans-serif",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {errMsg}
+                  </div>
+                </div>
+              );
+            })()}
+
             <div>
               <div
                 style={{

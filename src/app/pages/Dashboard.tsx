@@ -619,7 +619,7 @@ export function Dashboard() {
             fontFamily: FF,
           }}
         >
-          Management Services Center · กรมอุตสาหกรรมทหาร (อท.)
+          Management Linkage Services Center · กรมอุตสาหกรรมทหาร (อท.)
         </p>
       </div>
 

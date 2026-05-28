@@ -201,7 +201,7 @@ export function Logs() {
     },
     {
       key: "service",
-      header: "Service / บริการ",
+      header: "บริการ",
       sortable: true,
       render: (row) => (
         <div>
@@ -399,7 +399,7 @@ export function Logs() {
             bg: "#ECFDF5",
           },
           {
-            label: "ข้อผิดพลาด (4xx/5xx)",
+            label: "กกก (4xx/5xx)",
             value: errorCount.toLocaleString(),
             color: "#DC2626",
             bg: "#FEF2F2",
@@ -487,7 +487,8 @@ export function Logs() {
               placeholder="ค้นหา Log ID, Client, Service..."
               style={{
                 width: "100%",
-                padding: "8px 12px 8px 36px",
+                height: "38px",
+                padding: "0 12px 0 36px",
                 border: "1px solid #E5E7EB",
                 borderRadius: "8px",
                 fontSize: "13px",
@@ -502,15 +503,18 @@ export function Logs() {
             value={clientFilter}
             onChange={(e) => setClientFilter(e.target.value)}
             style={{
-              padding: "8px 10px",
+              height: "38px",
+              padding: "0 12px",
               border: "1px solid #E5E7EB",
               borderRadius: "8px",
-              fontSize: "12px",
+              fontSize: "13px",
               fontFamily:
                 "'Noto Sans Thai', 'Inter', sans-serif",
               outline: "none",
               backgroundColor: "white",
               cursor: "pointer",
+              color: "#374151",
+              boxSizing: "border-box",
             }}
           >
             {allClients.map((c) => (
@@ -523,15 +527,18 @@ export function Logs() {
             value={serviceFilter}
             onChange={(e) => setServiceFilter(e.target.value)}
             style={{
-              padding: "8px 10px",
+              height: "38px",
+              padding: "0 12px",
               border: "1px solid #E5E7EB",
               borderRadius: "8px",
-              fontSize: "12px",
+              fontSize: "13px",
               fontFamily:
                 "'Noto Sans Thai', 'Inter', sans-serif",
               outline: "none",
               backgroundColor: "white",
               cursor: "pointer",
+              color: "#374151",
+              boxSizing: "border-box",
             }}
           >
             {allServices.map((s) => (
@@ -553,12 +560,14 @@ export function Logs() {
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
               style={{
-                padding: "7px 9px",
+                height: "38px",
+                padding: "0 12px",
                 border: "1px solid #E5E7EB",
                 borderRadius: "8px",
-                fontSize: "12px",
+                fontSize: "13px",
                 outline: "none",
                 cursor: "pointer",
+                boxSizing: "border-box",
               }}
             />
             <span
@@ -571,12 +580,14 @@ export function Logs() {
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
               style={{
-                padding: "7px 9px",
+                height: "38px",
+                padding: "0 12px",
                 border: "1px solid #E5E7EB",
                 borderRadius: "8px",
-                fontSize: "12px",
+                fontSize: "13px",
                 outline: "none",
                 cursor: "pointer",
+                boxSizing: "border-box",
               }}
             />
           </div>
@@ -594,7 +605,7 @@ export function Logs() {
         open={!!selectedLog}
         onClose={() => setSelectedLog(null)}
         title="รายละเอียด Log"
-        subtitle={selectedLog?.id}
+        subtitle={"cccc"}
         size="lg"
         footer={
           <Button

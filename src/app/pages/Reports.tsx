@@ -272,12 +272,14 @@ export function Reports() {
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
               style={{
-                padding: "6px 9px",
+                height: "38px",
+                padding: "0 12px",
                 border: "1px solid #E5E7EB",
-                borderRadius: "7px",
-                fontSize: "12px",
+                borderRadius: "8px",
+                fontSize: "13px",
                 outline: "none",
                 cursor: "pointer",
+                boxSizing: "border-box",
               }}
             />
             <span
@@ -290,12 +292,14 @@ export function Reports() {
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
               style={{
-                padding: "6px 9px",
+                height: "38px",
+                padding: "0 12px",
                 border: "1px solid #E5E7EB",
-                borderRadius: "7px",
-                fontSize: "12px",
+                borderRadius: "8px",
+                fontSize: "13px",
                 outline: "none",
                 cursor: "pointer",
+                boxSizing: "border-box",
               }}
             />
           </div>

@@ -4,7 +4,7 @@ import { LucideIcon } from 'lucide-react';
 interface ButtonProps {
   children: ReactNode;
   onClick?: () => void;
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'teal' | 'outline';
+  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'ghost' | 'teal' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   icon?: LucideIcon;
   iconPosition?: 'left' | 'right';
@@ -16,6 +16,7 @@ const variants = {
   primary: { bg: '#003087', color: 'white', border: '#003087', hoverBg: '#002470' },
   teal: { bg: '#00A8A8', color: 'white', border: '#00A8A8', hoverBg: '#00898A' },
   secondary: { bg: '#F3F4F6', color: '#374151', border: '#E5E7EB', hoverBg: '#E5E7EB' },
+  success: { bg: '#217346', color: 'white', border: '#217346', hoverBg: '#185C38' },
   danger: { bg: '#FEF2F2', color: '#DC2626', border: '#FECACA', hoverBg: '#FEE2E2' },
   ghost: { bg: 'transparent', color: '#374151', border: 'transparent', hoverBg: '#F9FAFB' },
   outline: { bg: 'transparent', color: '#003087', border: '#003087', hoverBg: '#EEF2FF' },

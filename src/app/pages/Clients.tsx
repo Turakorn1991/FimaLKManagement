@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Search, Info } from "lucide-react";
-import { Breadcrumb } from "../components/Breadcrumb";
 import { DataTable, Column } from "../components/DataTable";
 import { StatusBadge } from "../components/StatusBadge";
 
@@ -159,7 +158,7 @@ export function Clients() {
     },
     {
       key: "name",
-      header: "ชื่อแอปพลิเคชัน",
+      header: "แอปพลิเคชัน",
       sortable: true,
       render: (row) => (
         <span
@@ -202,7 +201,7 @@ export function Clients() {
 
   return (
     <div>
-      <div style={{ marginBottom: "20px" }}>
+<div style={{ marginBottom: "20px" }}>
         <h1
           style={{
             fontSize: "20px",
@@ -363,7 +362,8 @@ export function Clients() {
               placeholder="ค้นหา Client ID, ชื่อแอปพลิเคชัน, หน่วยงาน..."
               style={{
                 width: "100%",
-                padding: "8px 12px 8px 36px",
+                height: "38px",
+                padding: "0 12px 0 36px",
                 border: "1px solid #E5E7EB",
                 borderRadius: "8px",
                 fontSize: "13px",

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Plus, Search, Edit2, Trash2 } from "lucide-react";
-import { Breadcrumb } from "../components/Breadcrumb";
 import { DataTable, Column } from "../components/DataTable";
 import { Button } from "../components/Button";
 import { Modal } from "../components/Modal";
@@ -468,7 +467,7 @@ export function Providers() {
   const columns: Column<Provider>[] = [
     {
       key: "name",
-      header: "ชื่อหน่วยงาน",
+      header: "หน่วยงาน",
       sortable: true,
       render: (row) => (
         <div
@@ -512,7 +511,7 @@ export function Providers() {
             <div
               style={{
                 fontSize: "11px",
-                color: "#9CA3AF",
+                color: "#6B7280",
                 marginTop: "1px",
                 fontFamily:
                   "'Noto Sans Thai', 'Inter', sans-serif",
@@ -601,33 +600,38 @@ export function Providers() {
       key: "updatedAt",
       header: "อัปเดตล่าสุด",
       sortable: true,
-      width: "260px",
-      render: (row) => (
-        <div>
-          <div
-            style={{
-              fontSize: "13px",
-              color: "#111827",
-              fontWeight: 500,
-              fontFamily:
-                "'Noto Sans Thai', 'Inter', sans-serif",
-            }}
-          >
-            {row.updatedAt}
+      width: "200px",
+      render: (row) => {
+        const T = ["08:15","09:30","10:45","11:20","13:00","14:22","15:10","16:35"];
+        const time = T[parseInt(row.updatedAt) % T.length];
+        const dateStr = row.updatedAt.replace("2568","2569");
+        return (
+          <div>
+            <div
+              style={{
+                fontSize: "13px",
+                color: "#111827",
+                fontWeight: 500,
+                fontFamily:
+                  "'Noto Sans Thai', 'Inter', sans-serif",
+              }}
+            >
+              {dateStr}, {time} น.
+            </div>
+            <div
+              style={{
+                fontSize: "11px",
+                color: "#6B7280",
+                marginTop: "2px",
+                fontFamily:
+                  "'Noto Sans Thai', 'Inter', sans-serif",
+              }}
+            >
+              โดย {row.updatedBy}
+            </div>
           </div>
-          <div
-            style={{
-              fontSize: "11px",
-              color: "#6B7280",
-              marginTop: "2px",
-              fontFamily:
-                "'Noto Sans Thai', 'Inter', sans-serif",
-            }}
-          >
-            โดย {row.updatedBy}
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       key: "actions",
@@ -697,7 +701,7 @@ export function Providers() {
 
   return (
     <div>
-      <div
+<div
         style={{
           display: "flex",
           alignItems: "flex-start",
@@ -764,7 +768,8 @@ export function Providers() {
               placeholder="ค้นหาหน่วยงาน, Code..."
               style={{
                 width: "100%",
-                padding: "8px 12px 8px 36px",
+                height: "38px",
+                padding: "0 12px 0 36px",
                 border: "1px solid #E5E7EB",
                 borderRadius: "8px",
                 fontSize: "13px",
@@ -981,10 +986,11 @@ export function Providers() {
                 maxLength={6}
                 style={{
                   width: "100%",
-                  padding: "9px 12px",
+                  height: "38px",
+                  padding: "0 12px",
                   border: "1px solid #E5E7EB",
                   borderRadius: "8px",
-                  fontSize: "14px",
+                  fontSize: "13px",
                   fontFamily: "monospace",
                   fontWeight: 700,
                   outline: "none",
@@ -1017,7 +1023,8 @@ export function Providers() {
                 placeholder="กรม..."
                 style={{
                   width: "100%",
-                  padding: "9px 12px",
+                  height: "38px",
+                  padding: "0 12px",
                   border: "1px solid #E5E7EB",
                   borderRadius: "8px",
                   fontSize: "13px",
@@ -1059,7 +1066,8 @@ export function Providers() {
                 placeholder={f.placeholder}
                 style={{
                   width: "100%",
-                  padding: "9px 12px",
+                  height: "38px",
+                  padding: "0 12px",
                   border: "1px solid #E5E7EB",
                   borderRadius: "8px",
                   fontSize: "13px",

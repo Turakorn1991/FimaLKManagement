@@ -9,6 +9,8 @@ interface ModalProps {
   children: ReactNode;
   footer?: ReactNode;
   size?: "sm" | "md" | "lg" | "xl";
+  icon?: ReactNode;
+  iconBg?: string;
 }
 
 const sizeMap = {
@@ -26,6 +28,8 @@ export function Modal({
   children,
   footer,
   size = "md",
+  icon,
+  iconBg = "#EEF2FF",
 }: ModalProps) {
   if (!open) return null;
 
@@ -69,32 +73,50 @@ export function Modal({
             gap: "12px",
           }}
         >
-          <div>
-            <h2
-              style={{
-                fontSize: "16px",
-                fontWeight: 600,
-                color: "#111827",
-                margin: 0,
-                fontFamily:
-                  "'Noto Sans Thai', 'Inter', sans-serif",
-              }}
-            >
-              {title}
-            </h2>
-            {subtitle && (
-              <p
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            {icon && (
+              <div
                 style={{
-                  fontSize: "13px",
-                  color: "#6B7280",
-                  margin: "2px 0 0",
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "9px",
+                  backgroundColor: iconBg,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                {icon}
+              </div>
+            )}
+            <div>
+              <h2
+                style={{
+                  fontSize: "16px",
+                  fontWeight: 600,
+                  color: "#111827",
+                  margin: 0,
                   fontFamily:
                     "'Noto Sans Thai', 'Inter', sans-serif",
                 }}
               >
-                {subtitle}
-              </p>
-            )}
+                {title}
+              </h2>
+              {subtitle && (
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#6B7280",
+                    margin: "2px 0 0",
+                    fontFamily:
+                      "'Noto Sans Thai', 'Inter', sans-serif",
+                  }}
+                >
+                  {subtitle}
+                </p>
+              )}
+            </div>
           </div>
           <button
             onClick={onClose}
