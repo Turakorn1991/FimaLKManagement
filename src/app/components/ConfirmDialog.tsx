@@ -25,6 +25,7 @@ const variantConfig: Record<
   ConfirmVariant,
   {
     icon: typeof AlertTriangle;
+    iconRing: string;
     iconBg: string;
     iconColor: string;
     confirmVariant: "danger" | "primary" | "teal";
@@ -32,27 +33,31 @@ const variantConfig: Record<
 > = {
   danger: {
     icon: Trash2,
+    iconRing: "#FEE2E2",
     iconBg: "#FEF2F2",
     iconColor: "#DC2626",
     confirmVariant: "danger",
   },
   warning: {
     icon: AlertTriangle,
+    iconRing: "#FEF3C7",
     iconBg: "#FFFBEB",
     iconColor: "#D97706",
     confirmVariant: "primary",
   },
   info: {
     icon: Info,
+    iconRing: "#E0E7FF",
     iconBg: "#EEF2FF",
     iconColor: "#4338CA",
     confirmVariant: "primary",
   },
   success: {
     icon: CheckCircle,
+    iconRing: "#DCFCE7",
     iconBg: "#F0FDF4",
     iconColor: "#16A34A",
-    confirmVariant: "teal",
+    confirmVariant: "primary",
   },
 };
 
@@ -145,14 +150,14 @@ export function ConfirmDialog({
           {/* Icon */}
           <div
             style={{
-              width: "60px",
-              height: "60px",
+              width: "56px",
+              height: "56px",
               borderRadius: "50%",
               backgroundColor: cfg.iconBg,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              margin: "0 auto 16px",
+              margin: "0 auto 20px",
             }}
           >
             <Icon size={28} color={cfg.iconColor} />

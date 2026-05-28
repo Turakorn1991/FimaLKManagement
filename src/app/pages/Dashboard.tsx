@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   ShieldCheck,
   Layers,
@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   XCircle,
   BarChart2,
+  ImageDown,
 } from "lucide-react";
 import {
   BarChart,
@@ -555,6 +556,105 @@ export function Dashboard() {
   const statCols  = w >= 1200 ? "repeat(5, 1fr)" : w >= 768 ? "repeat(3, 1fr)" : "repeat(2, 1fr)";
   const twoCols   = w >= 900  ? "1fr 1fr" : "1fr";
 
+  const chartRef1 = useRef<HTMLDivElement>(null);
+  const chartRef2 = useRef<HTMLDivElement>(null);
+
+  const downloadChartPNG = (
+    ref: React.RefObject<HTMLDivElement>,
+    title: string,
+    filename: string,
+    legend?: Array<{ label: string; value: number; color: string }>,
+  ) => {
+    const container = ref.current;
+    if (!container) return;
+    const svg = container.querySelector("svg");
+    if (!svg) return;
+
+    const sc = 2;
+    const padX = 24;
+    const headerH = 56;
+    const itemH = 20;
+    const legendPad = 14;
+    const footerH = 12;
+
+    const svgW = svg.clientWidth;
+    const svgH = svg.clientHeight;
+    const legendH = legend && legend.length > 0
+      ? 1 + legendPad + legend.length * itemH + legendPad
+      : 0;
+
+    const canvas = document.createElement("canvas");
+    canvas.width  = (svgW + padX * 2) * sc;
+    canvas.height = (headerH + svgH + legendH + footerH) * sc;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Background & border
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = "#E5E7EB";
+    ctx.lineWidth = sc;
+    ctx.strokeRect(sc / 2, sc / 2, canvas.width - sc, canvas.height - sc);
+
+    // Header
+    ctx.fillStyle = "#111827";
+    ctx.font = `bold ${13 * sc}px Inter, sans-serif`;
+    ctx.fillText(title, padX * sc, 24 * sc);
+    ctx.fillStyle = "#9CA3AF";
+    ctx.font = `${10 * sc}px Inter, sans-serif`;
+    ctx.fillText("ข้อมูลรวมทั้งหมด · เรียงจากสูงสุด", padX * sc, 42 * sc);
+
+    // Draw SVG chart
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, padX * sc, headerH * sc, svgW * sc, svgH * sc);
+      URL.revokeObjectURL(url);
+
+      // Legend
+      if (legend && legend.length > 0) {
+        const legendY0 = headerH + svgH;
+
+        // Divider line
+        ctx.strokeStyle = "#F3F4F6";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padX * sc, legendY0 * sc);
+        ctx.lineTo((svgW + padX) * sc, legendY0 * sc);
+        ctx.stroke();
+
+        legend.forEach((item, i) => {
+          const midY = legendY0 + 1 + legendPad + i * itemH + itemH / 2;
+
+          // Colored square
+          ctx.fillStyle = item.color;
+          ctx.fillRect(padX * sc, (midY - 3.5) * sc, 7 * sc, 7 * sc);
+
+          // Label (bold)
+          ctx.fillStyle = "#374151";
+          ctx.font = `600 ${10 * sc}px Inter, sans-serif`;
+          const labelText = item.label;
+          ctx.fillText(labelText, (padX + 13) * sc, (midY + 3.5) * sc);
+
+          // " · N,NNN requests" (gray)
+          const labelW = ctx.measureText(labelText).width;
+          ctx.fillStyle = "#9CA3AF";
+          ctx.font = `${10 * sc}px Inter, sans-serif`;
+          ctx.fillText(` · ${item.value.toLocaleString()} requests`, (padX + 13) * sc + labelW, (midY + 3.5) * sc);
+        });
+      }
+
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    };
+    img.src = url;
+  };
+
   return (
     <div style={{ fontFamily: FF }}>
       {/* Page title */}
@@ -683,9 +783,25 @@ export function Dashboard() {
                   ข้อมูลรวมทั้งหมด · เรียงจากสูงสุด
                 </p>
               </div>
+              <button
+                onClick={() => downloadChartPNG(chartRef1, "Top 5 บริการใบอนุญาต/หนังสืออนุญาต ของ อท.", "OT-License-Top5.png", top5.map((svc, i) => ({ label: svc.label, value: svc.value, color: BAR_COLORS[i] })))}
+                title="ดาวน์โหลดกราฟ PNG"
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = NAVY; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#E5E7EB"; }}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: "5px",
+                  padding: "6px 12px", border: "1px solid #E5E7EB", borderRadius: "7px",
+                  backgroundColor: "white", color: "#374151", fontSize: "11px",
+                  fontWeight: 500, cursor: "pointer", fontFamily: FF,
+                  transition: "all 0.15s", flexShrink: 0,
+                }}
+              >
+                <ImageDown size={13} />ดาวน์โหลดกราฟ
+              </button>
             </div>
           </div>
 
+          <div ref={chartRef1}>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart
               data={top5}
@@ -736,6 +852,7 @@ export function Dashboard() {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
+          </div>
 
           {/* Legend */}
           <div
@@ -827,9 +944,25 @@ export function Dashboard() {
                   ข้อมูลรวมทั้งหมด · เรียงจากสูงสุด
                 </p>
               </div>
+              <button
+                onClick={() => downloadChartPNG(chartRef2, "Top 5 บริการเชื่อมโยงข้อมูล (Linkage II)", "Linkage2-Top5.png", LINKAGE2_SERVICES.map((svc, i) => ({ label: svc.label, value: svc.value, color: TEAL_COLORS[i] })))}
+                title="ดาวน์โหลดกราฟ PNG"
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = TEAL; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#E5E7EB"; }}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: "5px",
+                  padding: "6px 12px", border: "1px solid #E5E7EB", borderRadius: "7px",
+                  backgroundColor: "white", color: "#374151", fontSize: "11px",
+                  fontWeight: 500, cursor: "pointer", fontFamily: FF,
+                  transition: "all 0.15s", flexShrink: 0,
+                }}
+              >
+                <ImageDown size={13} />ดาวน์โหลดกราฟ
+              </button>
             </div>
           </div>
 
+          <div ref={chartRef2}>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart
               data={LINKAGE2_SERVICES}
@@ -880,6 +1013,7 @@ export function Dashboard() {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
+          </div>
 
           {/* Legend */}
           <div

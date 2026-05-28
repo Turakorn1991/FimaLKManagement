@@ -321,9 +321,59 @@ summaryAll = { total: 28_750, success: 27_340, failure: 1_410 }  // Linkage II
 - `title`: "เพิ่มข้อมูลผู้ให้บริการ" / "แก้ไขข้อมูลผู้ให้บริการ"
 - `subtitle`: "เพิ่มหน่วยงานผู้ให้บริการข้อมูลใหม่เข้าสู่ระบบ" (add) / `` `Provider ID: ${editPrv.id}` `` (edit)
 - Form fields: Code (monospace, `fontWeight 400`, maxLength 6, toUpperCase) + ชื่อหน่วยงาน + อีเมลผู้ดูแล + คำอธิบาย
-- Footer: ยกเลิก (secondary) · บันทึก (`icon={Save}`, primary)
+- Footer: ยกเลิก (secondary) · บันทึก (`icon={Save}`, onClick → `setShowSaveConfirm(true)`)
 
-**Delete** — `ConfirmDialog` wrapping `Modal`; removes provider from local `useState` array.
+**Save ConfirmDialog** (`showSaveConfirm`) — `variant="success"` (CheckCircle, green icon, navy primary button):
+- Add: `title="ยืนยันการเพิ่มข้อมูล"` · `message="คุณต้องการเพิ่มข้อมูลหรือไม่?"`
+- Edit: `title="ยืนยันการแก้ไขข้อมูล"` · `message="คุณต้องการแก้ไขข้อมูลหรือไม่?"`
+- `confirmLabel="ยืนยัน"` · onConfirm: `setShowSaveConfirm(false); setShowModal(false)`
+
+**Delete** — `ConfirmDialog` `variant="danger"`; removes provider from local `useState` array.
+
+---
+
+### บริการ (Services)
+
+**File**: `src/app/pages/Services.tsx` — full CRUD (add / edit / delete / toggle active).
+
+**Data** — 25 mock services across 12 providers: DOTI×10, DOPA×4, RD×1, DBD×3, DIW×1, DPIM×1, IEAT×1, DOL×1, DMF×2, RTP×1, LED×1, DL×1. Service IDs follow `{CODE}-{NNNN}` pattern.
+
+**Interface**
+```ts
+interface Service {
+  id: string; name: string; provider: string; providerCode: string;
+  updatedAt: string; updatedBy: string; seq: number;
+  isActive: boolean; description: string;
+}
+```
+
+**Columns** — Service ID (130px, monospace, sortable, `fontWeight 400`) → บริการ (auto, name `fontWeight 400` + description sub-text `fontSize 11px #6B7280`) → หน่วยงาน (auto, dark badge `#1F2937` providerCode `fontWeight 700` + provider text `fontWeight 400`) → อัปเดตล่าสุด (200px, date `fontWeight 400` + "โดย {updatedBy}" sub-text) → สถานะ (160px, center, `ToggleSwitch` + label text) → จัดการ (90px, center, Edit + Delete icon buttons)
+
+**Font weight rule**: all data `fontWeight: 400`. Exception: providerCode dark badge stays `fontWeight 700` — visual identifier.
+
+**หน่วยงาน column** — dark badge (`#1F2937`, `padding "2px 7px"`, `fontSize 9px`, monospace, `fontWeight 700`) + provider name span (`fontWeight 400`)
+
+**อัปเดตล่าสุด column** — date string with year replaced 2568→2569 + time from `T[]` pool; sub-text "โดย {row.updatedBy}" — both `fontWeight 400`
+
+**Filter chips** — same pattern as Providers/Clients: ทั้งหมด (navy) / เปิดใช้งาน (green) / ปิดใช้งาน (gray) with live count badge
+
+**Search + Provider filter** — `flex` row: search input (`flex: 1`, `minWidth 280px`) + Provider `<select>` dropdown (`height 38px`); `providerFilter` initialized from `useSearchParams().get("provider") ?? "all"`
+
+**Add/Edit Modal** (`showModal`)
+- `icon={<Layers size={17} color="#003087" />}` `iconBg="#EEF2FF"`
+- `title`: "เพิ่มบริการใหม่" / "แก้ไขข้อมูลบริการ"
+- `subtitle`: `"Service ID จะถูกสร้างอัตโนมัติจาก Provider Code"` (add) / `` `Service ID: ${editSvc.id}` `` (edit)
+- Form fields (add only: Provider select) + ชื่อบริการ + คำอธิบาย — **no Service ID preview box**
+- Footer: ยกเลิก (secondary) · บันทึก (`icon={Save}`, onClick → `setShowSaveConfirm(true)`)
+
+**Save ConfirmDialog** (`showSaveConfirm`) — same pattern as Providers:
+- Add: `title="ยืนยันการเพิ่มข้อมูล"` · `message="คุณต้องการเพิ่มข้อมูลหรือไม่?"`
+- Edit: `title="ยืนยันการแก้ไขข้อมูล"` · `message="คุณต้องการแก้ไขข้อมูลหรือไม่?"`
+- `variant="success"` · `confirmLabel="ยืนยัน"` · onConfirm: `setShowSaveConfirm(false); setShowModal(false)`
+
+**Toggle ConfirmDialog** (`toggleConfirm`) — `variant="warning"` (disable) / `"success"` (enable); confirmLabel "ปิดบริการ" / "เปิดบริการ"
+
+**Delete ConfirmDialog** (`confirm`) — `variant="danger"` (default); confirmLabel "ลบบริการ"
 
 ---
 

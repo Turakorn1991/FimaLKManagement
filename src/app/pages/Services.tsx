@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router";
-import { Plus, Search, Edit2, Trash2 } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, Save, Layers } from "lucide-react";
 import { DataTable, Column } from "../components/DataTable";
 import { ToggleSwitch } from "../components/ToggleSwitch";
 import { Button } from "../components/Button";
@@ -368,6 +368,7 @@ export function Services() {
   const [confirm, setConfirm] = useState<Service | null>(null);
   const [toggleConfirm, setToggleConfirm] =
     useState<Service | null>(null);
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
   const [form, setForm] = useState({
     providerCode: "DOTI",
     name: "",
@@ -441,7 +442,7 @@ export function Services() {
           style={{
             fontFamily: "monospace",
             fontSize: "12px",
-            fontWeight: 700,
+            fontWeight: 400,
             color: "#374151",
             letterSpacing: "0.02em",
           }}
@@ -458,7 +459,7 @@ export function Services() {
         <div>
           <div
             style={{
-              fontWeight: 500,
+              fontWeight: 400,
               color: "#111827",
               fontFamily:
                 "'Noto Sans Thai', 'Inter', sans-serif",
@@ -510,6 +511,7 @@ export function Services() {
           <span
             style={{
               fontSize: "13px",
+              fontWeight: 400,
               color: "#374151",
               fontFamily:
                 "'Noto Sans Thai', 'Inter', sans-serif",
@@ -535,7 +537,7 @@ export function Services() {
               style={{
                 fontSize: "13px",
                 color: "#111827",
-                fontWeight: 500,
+                fontWeight: 400,
                 fontFamily:
                   "'Noto Sans Thai', 'Inter', sans-serif",
               }}
@@ -824,7 +826,7 @@ export function Services() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="ค้นหา Service ID, ชื่อบริการ, Provider..."
+              placeholder="ค้นหา Service ID, บริการ, หน่วยงาน..."
               style={{
                 width: "100%",
                 height: "38px",
@@ -857,7 +859,7 @@ export function Services() {
               boxSizing: "border-box",
             }}
           >
-            <option value="all">Provider ทั้งหมด</option>
+            <option value="all">หน่วยงาน ทั้งหมด</option>
             {providers.map((p) => (
               <option key={p.code} value={p.code}>
                 {p.code} — {p.name}
@@ -911,13 +913,15 @@ export function Services() {
         open={showModal}
         onClose={() => setShowModal(false)}
         title={
-          editSvc ? "แก้ไขข้อมูลบริการ" : "เพิ่มบริการใหม่"
+          editSvc ? "แก้ไขข้อมูลบริการ" : "เพิ่มข้อมูลบริการ"
         }
         subtitle={
           editSvc
             ? `Service ID: ${editSvc.id}`
             : "Service ID จะถูกสร้างอัตโนมัติจาก Provider Code"
         }
+        icon={<Layers size={17} color="#003087" />}
+        iconBg="#EEF2FF"
         size="md"
         footer={
           <>
@@ -927,8 +931,11 @@ export function Services() {
             >
               ยกเลิก
             </Button>
-            <Button onClick={() => setShowModal(false)}>
-              {editSvc ? "บันทึกการแก้ไข" : "เพิ่มบริการ"}
+            <Button
+              icon={Save}
+              onClick={() => setShowSaveConfirm(true)}
+            >
+              บันทึก
             </Button>
           </>
         }
@@ -954,7 +961,7 @@ export function Services() {
                     "'Noto Sans Thai', 'Inter', sans-serif",
                 }}
               >
-                Provider / หน่วยงาน{" "}
+                หน่วยงาน{" "}
                 <span style={{ color: "#DC2626" }}>*</span>
               </label>
               <select
@@ -988,53 +995,6 @@ export function Services() {
               </select>
             </div>
           )}
-
-          {/* Auto-generated Service ID preview */}
-          <div
-            style={{
-              padding: "12px 14px",
-              backgroundColor: "#F0F4F8",
-              borderRadius: "8px",
-              border: "1px solid #E5E7EB",
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "12px",
-                color: "#6B7280",
-                fontFamily:
-                  "'Noto Sans Thai', 'Inter', sans-serif",
-              }}
-            >
-              Service ID ที่จะสร้าง:
-            </div>
-            <div
-              style={{
-                fontFamily: "monospace",
-                fontSize: "16px",
-                fontWeight: 700,
-                color: "#003087",
-                letterSpacing: "0.05em",
-              }}
-            >
-              {editSvc ? editSvc.id : previewId}
-            </div>
-            {!editSvc && (
-              <div
-                style={{
-                  fontSize: "11px",
-                  color: "#9CA3AF",
-                  fontFamily:
-                    "'Noto Sans Thai', 'Inter', sans-serif",
-                }}
-              >
-                (สร้างอัตโนมัติ)
-              </div>
-            )}
-          </div>
 
           <div>
             <label
@@ -1114,6 +1074,25 @@ export function Services() {
           </div>
         </div>
       </Modal>
+
+      <ConfirmDialog
+        open={showSaveConfirm}
+        onClose={() => setShowSaveConfirm(false)}
+        onConfirm={() => {
+          setShowSaveConfirm(false);
+          setShowModal(false);
+        }}
+        variant="success"
+        title={
+          editSvc ? "ยืนยันการแก้ไขข้อมูล" : "ยืนยันการเพิ่มข้อมูล"
+        }
+        message={
+          editSvc
+            ? "คุณต้องการแก้ไขข้อมูลหรือไม่?"
+            : "คุณต้องการเพิ่มข้อมูลหรือไม่?"
+        }
+        confirmLabel="ยืนยัน"
+      />
     </div>
   );
 }

@@ -428,6 +428,7 @@ export function Providers() {
   });
   const [servicesModal, setServicesModal] =
     useState<Provider | null>(null);
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
 
   const handleDelete = (id: string) => {
     setProviders((prev) => prev.filter((p) => p.id !== id));
@@ -816,6 +817,19 @@ export function Providers() {
         confirmLabel="ยืนยัน"
       />
 
+      <ConfirmDialog
+        open={showSaveConfirm}
+        onClose={() => setShowSaveConfirm(false)}
+        onConfirm={() => {
+          setShowSaveConfirm(false);
+          setShowModal(false);
+        }}
+        variant="success"
+        title={editPrv ? "ยืนยันการแก้ไขข้อมูล" : "ยืนยันการเพิ่มข้อมูล"}
+        message={editPrv ? "คุณต้องการแก้ไขข้อมูลหรือไม่?" : "คุณต้องการเพิ่มข้อมูลหรือไม่?"}
+        confirmLabel="ยืนยัน"
+      />
+
       <Modal
         open={!!servicesModal}
         onClose={() => setServicesModal(null)}
@@ -966,7 +980,7 @@ export function Providers() {
             >
               ยกเลิก
             </Button>
-            <Button icon={Save} onClick={() => setShowModal(false)}>
+            <Button icon={Save} onClick={() => setShowSaveConfirm(true)}>
               บันทึก
             </Button>
           </>
